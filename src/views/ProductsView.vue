@@ -2,16 +2,16 @@
     <div>
         <el-container>
           <nav-bar-view></nav-bar-view>
-            <el-main>
-              <h1 class="text-center">Hello, Bootstrap!</h1>
-              <button class="btn btn-primary">Click Me</button>
-              <el-row>
-              <el-col :span="4" v-for="product in products" :key="product">
-                  <product-card-view :product=product></product-card-view>
-              </el-col>
-              </el-row>
-            </el-main>
-            <el-footer>Footer</el-footer>
+          <el-main>
+            <el-row>
+            <el-col :span="4" v-for="product in products" :key="product">
+                <product-card-view :product=product></product-card-view>
+            </el-col>
+            </el-row>
+          </el-main>
+          <el-footer>
+            <footer-view></footer-view>
+          </el-footer>
         </el-container>
     </div>
 </template>
@@ -20,9 +20,10 @@
 import ProductCardView from '@/components/ProductCardView.vue'
 import axios from 'axios'
 import NavBarView from '@/components/NavBarView.vue'
+import FooterView from '@/components/FooterView.vue'
 
 export default {
-  components: {ProductCardView, NavBarView  },
+  components: {ProductCardView, NavBarView ,FooterView },
 
   data() {
     return {

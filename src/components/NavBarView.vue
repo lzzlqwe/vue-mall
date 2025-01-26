@@ -28,6 +28,19 @@
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
+      <div class="ms-3">
+        <i class="fa-solid fa-cart-shopping fa-xl"></i>
+      </div>
+
+      <!-- 用户处于登录状态则显示这个 -->
+      <div class="ms-3">
+        <i class="fa-solid fa-user fa-xl"></i>
+      </div>
+
+      <!-- 用户未登录时 -->
+      <div class="ms-3">
+        <button type="button" class="btn btn-primary">Sign In</button>
+      </div>
     </div>
   </div>
 </nav>
