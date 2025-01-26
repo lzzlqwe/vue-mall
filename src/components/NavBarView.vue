@@ -39,7 +39,9 @@
 
       <!-- 用户未登录时 -->
       <div class="ms-3">
-        <button type="button" class="btn btn-primary">Sign In</button>
+        <router-link to="/sign_in">
+          <button type="button" class="btn btn-primary">Sign In</button>
+        </router-link>
       </div>
     </div>
   </div>
