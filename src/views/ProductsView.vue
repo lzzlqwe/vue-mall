@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-container>
-            <el-header>商品列表</el-header>
+          <nav-bar-view></nav-bar-view>
             <el-main>
               <h1 class="text-center">Hello, Bootstrap!</h1>
               <button class="btn btn-primary">Click Me</button>
@@ -19,9 +19,10 @@
 <script>
 import ProductCardView from '@/components/ProductCardView.vue'
 import axios from 'axios'
+import NavBarView from '@/components/NavBarView.vue'
 
 export default {
-  components: {ProductCardView  },
+  components: {ProductCardView, NavBarView  },
 
   data() {
     return {
