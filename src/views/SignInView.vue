@@ -3,14 +3,14 @@
         <nav-bar-view></nav-bar-view>
         <div class="row justify-content-center">
             <div class="col-4">
-                <form>
+                <form method="post" action="/api/auth/login">
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                        <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" id="password" name="password">
                     </div>
                     <div class="mb-3">
                         Don't have an account? Click here to <router-link to="/signup">Sign up</router-link>
