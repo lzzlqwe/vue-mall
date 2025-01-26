@@ -3,7 +3,7 @@
         <nav-bar-view></nav-bar-view>
         <div class="row justify-content-center">
             <div class="col-4">
-                <form method="post" action="/api/auth/login">
+                <form method="post" action="/api/user/login">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
                         <input type="email" class="form-control" id="email" name="email">
