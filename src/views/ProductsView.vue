@@ -2,6 +2,7 @@
     <div>
         <el-container>
           <nav-bar-view></nav-bar-view>
+          <div>
           <el-main>
             <el-row>
             <el-col :span="4" v-for="product in products" :key="product">
@@ -9,6 +10,7 @@
             </el-col>
             </el-row>
           </el-main>
+          </div>
           <el-footer>
             <footer-view></footer-view>
           </el-footer>
