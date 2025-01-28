@@ -25,7 +25,8 @@
 
 <script>
 import NavBarView from '@/components/NavBarView.vue'
-import axios from 'axios'
+import axios from '../axios'; // 导入自定义的 Axios 实例
+// import axios from 'axios'
 // import { reactive } from 'vue';
 
 export default {
@@ -69,7 +70,9 @@ export default {
     methods: {
         handleSubmit() {
             console.log('表单数据:', this.loginForm);
-            axios.post('https://apifoxmock.com/m2/5472524-5148051-default/257514650', this.loginForm).then(
+            // axios.post('https://apifoxmock.com/m2/5472524-5148051-default/257514650', this.loginForm).then(
+            axios.post('/buyer/user/login', this.loginForm).then(
+            // axios.post('http://localhost:9991/buyer/user/login', this.loginForm).then(
                 (res) => {
                     console.log('返回数据:', res);
                     // window.alert('登录成功', res);

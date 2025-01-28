@@ -20,7 +20,8 @@
 
 <script>
 import ProductCardView from '@/components/ProductCardView.vue'
-import axios from 'axios'
+// import axios from 'axios'
+import axios from '../axios'; // 导入自定义的 Axios 实例
 import NavBarView from '@/components/NavBarView.vue'
 import FooterView from '@/components/FooterView.vue'
 

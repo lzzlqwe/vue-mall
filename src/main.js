@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 //引入bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 
