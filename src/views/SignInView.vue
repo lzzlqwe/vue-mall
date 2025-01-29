@@ -3,7 +3,7 @@
         <nav-bar-view></nav-bar-view>
         <div class="row justify-content-center">
             <div class="col-4">
-                <form> <!-- method="post" action="/api/user/login" -->
+                <form @submit.prevent="submitForm">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
                         <input type="email" class="form-control" id="email" name="email" v-model="loginForm.email">
@@ -15,7 +15,7 @@
                     <div class="mb-3">
                         Don't have an account? Click here to <router-link to="/signup">Sign up</router-link>
                     </div>
-                    <button class="btn btn-primary" @click="handleSubmit">Sign in</button>
+                    <button class="btn btn-primary">Sign in</button>
                 </form>
             </div>
         </div>
@@ -23,40 +23,49 @@
 
 </template>
 
-<script>
-import NavBarView from '@/components/NavBarView.vue'
-import axios from '../axios'; // 导入自定义的 Axios 实例
-// import axios from 'axios'
-// import { reactive } from 'vue';
+  <script>
+//   import axios from 'axios';
+  import NavBarView from '@/components/NavBarView.vue'
+  import axios from '../axios'; // 导入自定义的 Axios 实例
+//   import { ref } from 'vue';
+  
+  export default {
 
-export default {
     components: {NavBarView},
-
     // setup() {
-    // const loginForm = reactive({
-    //   email: '',
-    //   password: ''
-    // });
+    //   const loginForm = ref({
+    //     email: '',
+    //     password: ''
+    //   });
+      
+    //   const submitForm = async () => {
+    //     try {
+    //       const response = await axios.post('/buyer/user/login', loginForm.value);
+    //       console.log('响应:', response.data);
+    //       // 处理成功逻辑，比如跳转或显示成功消息
+    //       if(response.data.code === 0){ //账号不存在或者密码错误
+    //         alert(response.data.msg);
+    //       }
+    //       else{
+    //         //登陆成功
+    //         //保存token
+    //         const token = response.data.data.token; // token 存在于响应数据中
+    //         localStorage.setItem('token', token); // 保存 token
+    //         //跳转到首页
+    //         // window.location.href = '/home';
 
-    // const handleSubmit = () => {
-    //   console.log('表单数据:', loginForm);
-    //   axios.post('http://127.0.0.1:4523/m2/5472524-5148051-default/257514650', loginForm).then(
-    //         (res) => {
-    //             console.log('返回数据:', res);
-    //         }
-    //     )
-    //         // axios.post('http://localhost:9991/buyer/user/login', loginForm).then(
-    //         //     (res) => {
-    //         //         console.log('返回数据:', res);
-    //         //     }
-    //         // )
-    // };
-
-    // return {
-    //   loginForm,
-    //   handleSubmit
-    // };
+    //       }
+    //     } catch (error) {
+    //       console.error('请求错误:', error);
+    //     }
+    //   };
+  
+    //   return {
+    //     loginForm,
+    //     submitForm,
+    //   };
     // }
+
 
     data() {
         return {
@@ -66,28 +75,32 @@ export default {
             }
         }
     },
-
     methods: {
-        handleSubmit() {
-            console.log('表单数据:', this.loginForm);
-            // axios.post('https://apifoxmock.com/m2/5472524-5148051-default/257514650', this.loginForm).then(
+        submitForm() {
             axios.post('/buyer/user/login', this.loginForm).then(
-            // axios.post('http://localhost:9991/buyer/user/login', this.loginForm).then(
                 (res) => {
-                    console.log('返回数据:', res);
-                    // window.alert('登录成功', res);
-                    this.$router.push('/home');
-                    //待解决问题：
-                    //1.跨域问题。从vue解决（https://www.cnblogs.com/youxl189/p/18032360）
-                    //2.输入邮箱只要带有@就会不按照预想的流程走
+                    console.log('响应:', res.data);
+                    if (res.data.code === 0) { // 账号不存在或者密码错误
+                        alert(res.data.msg);
+                    } else {
+                        // 登录成功
+                        // 保存 token
+                        const token = res.data.data.token; // token 存在于响应数据中
+                        localStorage.setItem('token', token); // 保存 token
+                        // 跳转到首页
+                        console.log('跳转到首页');
+                        // this.$router.push('/home');
+                        this.$router.push({ name:'home'}); //还可以携带参数跳转到首页，可根据id来选择展示右上角图标
+                    }
                 }
-            )
+            ).catch((error) => {
+                console.error('请求错误:', error);
+            });
         }
     }
 
-
-}
-
-</script>
-
-<style></style>
+  };
+  </script>
+  
+  <style>
+  </style>

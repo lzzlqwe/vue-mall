@@ -15,6 +15,13 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // 在发送请求之前做些什么
     console.log('请求拦截器', config);
+    //携带token
+    const token = localStorage.getItem('token'); // 从 localStorage 获取 token
+    if (token) {
+      // config.headers['Authorization'] = `Bearer ${token}`; // 添加 Authorization 头
+      config.headers['Token'] = token; // 添加 Authorization 头
+      console.log('携带token');
+    }
     return config;
   },
   (error) => {
@@ -24,16 +31,16 @@ axiosInstance.interceptors.request.use(
 );
 
 // 添加响应拦截器（可选）
-axiosInstance.interceptors.response.use(
-  (response) => {
-    // 处理响应数据
-    console.log('响应拦截器', response);
-    return response;
-  },
-  (error) => {
-    // 处理响应错误
-    return Promise.reject(error);
-  }
-);
+// axiosInstance.interceptors.response.use(
+//   (response) => {
+//     // 处理响应数据
+//     console.log('响应拦截器', response);
+//     return response;
+//   },
+//   (error) => {
+//     // 处理响应错误
+//     return Promise.reject(error);
+//   }
+// );
 
 export default axiosInstance;
