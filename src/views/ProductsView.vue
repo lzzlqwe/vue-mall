@@ -4,7 +4,6 @@
           <nav-bar-view></nav-bar-view>
           <div>
           <el-main>
-            <button type="button" class="btn btn-primary" @click="test">测试按钮</button>
             <el-row>
             <el-col :span="4" v-for="product in products" :key="product">
                 <product-card-view :product=product></product-card-view>
@@ -35,22 +34,25 @@ export default {
     }
   },
   mounted() {
-        axios.get("https://apifoxmock.com/m2/5442790-5117933-default/257412739").then((result) => {
-            this.products  = result.data.data;
+        // axios.get("https://apifoxmock.com/m2/5442790-5117933-default/257412739").then((result) => {
+        axios.get("/buyer/product/page", {
+            params: {
+                page: 1,
+                pageSize: 12,
+                name: null,
+                categoryId: null,
+            }
+        }).then((result) => {
+            console.log("返回商品总数: ", result.data.data.total);
+            this.products  = result.data.data.records;
+        }).catch((error) => {
+            console.error('未携带token:', error);
+            this.$router.push({ name:'sign_in'}); 
         });
     },
 
   methods: {
-      test() {
-          axios.get('/buyer/test', this.loginForm).then(
-              (res) => {
-                  console.log('响应:', res.data);
-                  
-              }
-          ).catch((error) => {
-              console.error('请求错误:', error);
-          });
-      }
+    
   }
     
 }

@@ -55,7 +55,9 @@ export default {
   }
 
   .image {
-    width: 100%;
+    width: 100%; /* 设置固定的宽度 */
+    height: 200px; /* 设置固定的高度 */
+    object-fit: cover; /* 控制图片如何适应这些固定的尺寸 */
     display: block;
   }
 
