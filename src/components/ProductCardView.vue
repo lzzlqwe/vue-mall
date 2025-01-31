@@ -1,13 +1,13 @@
 <template>
     <el-card :body-style="{ padding: '0px'}">
-    <img :src=product.picture class="image">
-    <div style="padding: 14px;">
+    <img :src=product.picture class="image" @click="openDialog">
+    <div style="padding: 14px;" @click="openDialog">
         <span class="span" style="font-weight: bold;">{{ product.name }}</span> <br>
         <div class="span">{{ product.description }}</div>
         <div class="bottom">
           <!-- <span style="font-size: 13px;">上架时间:  </span><time class="time">{{ currentDate }}</time> -->
           <span class="price">¥ <span class="price_number">{{ product.price }}</span></span>
-          <el-button type="warning" icon="el-icon-shopping-cart-full" circle></el-button>
+          <!-- <el-button type="warning" icon="el-icon-shopping-cart-full" circle></el-button> -->
         </div>
     </div>
     </el-card>
@@ -21,8 +21,16 @@ export default {
 
   data() {
     return {
-      currentDate: new Date()
+      currentDate: new Date(),
+      my_product: this.product,
     };
+  },
+
+  methods: {
+    openDialog() {
+      console.log("点击了商品卡片id:",this.product.id);
+      this.$emit('product:click', this.product.id);
+    }
   }
 
   

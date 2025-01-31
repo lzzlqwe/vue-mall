@@ -6,24 +6,56 @@
           <el-main style="min-height: calc(80vh);">
             <el-row>
             <el-col :span="4" v-for="product in products" :key="product">
-                <product-card-view :product=product></product-card-view>
+                <product-card-view :product=product @product:click="openDialog"></product-card-view>
             </el-col>
             </el-row>
           </el-main>
           <el-pagination 
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :page-sizes="[6, 12, 18, 24]"
-            background 
-            layout="sizes, prev, pager, next, total" 
-            :total="1000">
-            </el-pagination>
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="[6, 12, 18, 24]"
+          background 
+          layout="sizes, prev, pager, next, total" 
+          :total="1000">
+          </el-pagination>
           </div>
           <el-footer>
             <footer-view></footer-view>
           </el-footer>
         </el-container>
+
+      <!-- 弹框内容 -->
+      <el-dialog :title=productDetail.name :visible.sync="dialogVisible" width="50%">
+        <div class="dialog-content">
+          <!-- 左侧图片 -->
+          <div class="image-section">
+            <img
+              :src=productDetail.picture
+              alt="Notebook"
+              class="product-image"
+            />
+          </div>
+          <!-- 右侧描述 -->
+          <div class="details-section">
+            <h2 style="font-weight: bold;">{{productDetail.name}}</h2>
+            <p style="font-size:large;">
+              {{productDetail.description}}
+            </p>
+            <h3><span style="font-size:medium;">¥ </span>{{productDetail.price}}</h3>
+  
+            <!-- 数量选择 -->
+            <div class="quantity">
+              <span>数量：</span>
+              <el-input-number v-model="quantity" :min="0" />
+            </div>
+  
+            <!-- 添加到购物车按钮 -->
+            <el-button type="primary" @click="addToCart">Add to Cart</el-button>
+          </div>
+        </div>
+      </el-dialog>
     </div>
+    
 </template>
 
 <script>
@@ -38,11 +70,29 @@ export default {
 
   data() {
     return {
+      //商品列表
       products: [],
+
+      //分页查询参数
       page: 1,
       pageSize: 6,
       name: null,
       categoryId: null,
+
+      //商品详情弹框
+      dialogVisible: false, // 控制弹框显示
+      quantity: 0, // 商品的默认数量
+
+      //商品详情数据
+      productDetail: {
+        id: null,
+        name: null, //商品名称
+        categoryId: null, //对应的商品分类id
+        categoryName: null, //分类名称
+        price: null, //商品价格
+        picture: null, //图片
+        description: null, //描述信息
+      }
     }
   },
   mounted() {
@@ -104,6 +154,30 @@ export default {
       this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
       console.log("分页查询");
     },
+
+    // 打开弹框
+    openDialog(productId) {
+      console.log("商品id:",productId);
+      // 根据商品id查询商品详情
+        axios.get(`/buyer/product/${productId}`).then((result) => {
+        this.productDetail = result.data.data;
+        console.log("返回商品详情信息: ", this.productDetail);
+
+        // 打开弹框
+        this.dialogVisible = true; 
+      }).catch((error) => {
+        console.error('查询商品错误:', error);
+      })
+    },
+    
+    // 添加到购物车
+    addToCart() {
+      this.$message({
+        message: `Added ${this.quantity} notebook(s) to the cart!`,
+        type: "success",
+      });
+      this.dialogVisible = false; // 关闭弹框
+    },
   }
     
 }
@@ -130,4 +204,28 @@ export default {
     text-align: center;
     line-height: 100%;
   }
+
+  /* 弹框样式 */
+  .dialog-content {
+    display: flex;
+    gap: 20px;
+  }
+  .image-section {
+    flex: 1;
+  }
+  .product-image {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+  }
+  .details-section {
+    flex: 1;
+  }
+  .quantity {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
 </style>
