@@ -25,7 +25,7 @@
         </el-container>
 
       <!-- 弹框内容 -->
-      <el-dialog :title=productDetail.name :visible.sync="dialogVisible" :before-close="handleClose" width="50%">
+      <el-dialog :title=productDetail.name :visible.sync="dialogVisible" width="50%">
         <div class="dialog-content">
           <!-- 左侧图片 -->
           <div class="image-section">
@@ -155,20 +155,6 @@ export default {
       console.log("分页查询");
     },
 
-    // // 打开弹框
-    // openDialog(productId) {
-    //   console.log("商品id:",productId);
-    //     // 根据商品id查询商品详情
-    //     axios.get(`/buyer/product/${productId}`).then((result) => {
-    //     this.productDetail = result.data.data;
-    //     console.log("返回商品详情信息: ", this.productDetail);
-
-    //     // 打开弹框
-    //     this.dialogVisible = true; 
-    //   }).catch((error) => {
-    //     console.error('查询商品错误:', error);
-    //   })
-    // },
     // 打开弹框
     async openDialog(productId) {
       console.log("商品id:", productId);
@@ -194,17 +180,11 @@ export default {
         // this.$message.error('查询商品详情失败，请重试');
       }
     },
-
-    // 关闭弹框的处理
-    handleClose(done) {
-      done(); //关闭弹框
-      this.quantity = 1; //关闭弹框将后,对话框商品数量置为默认值
-    },
     
     // 添加到购物车
     addToCart() {
       this.$message({
-        message: `Added ${this.quantity} notebook(s) to the cart!`,
+        message: `Added ${this.productDetail.quantity} ${this.productDetail.name}(s) to the cart!`,
         type: "success",
       });
       this.dialogVisible = false; // 关闭弹框
