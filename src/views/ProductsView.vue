@@ -3,7 +3,7 @@
         <el-container>
           <nav-bar-view @update:search="func1" @click::button="search_click" @update:dropdown="func2" ></nav-bar-view>
           <div>
-          <el-main>
+          <el-main style="min-height: calc(80vh);">
             <el-row>
             <el-col :span="4" v-for="product in products" :key="product">
                 <product-card-view :product=product></product-card-view>
@@ -11,13 +11,13 @@
             </el-row>
           </el-main>
           <el-pagination 
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :page-sizes="[6, 12, 18, 24]"
-          background 
-          layout="sizes, prev, pager, next, total" 
-          :total="1000">
-          </el-pagination>
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[6, 12, 18, 24]"
+            background 
+            layout="sizes, prev, pager, next, total" 
+            :total="1000">
+            </el-pagination>
           </div>
           <el-footer>
             <footer-view></footer-view>

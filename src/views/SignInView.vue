@@ -1,7 +1,8 @@
 <template>
     <div>
+        <main>
         <nav-bar-view></nav-bar-view>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" style="min-height: calc(80vh);">
             <div class="col-4">
                 <form @submit.prevent="submitForm">
                     <div class="mb-3">
@@ -19,6 +20,8 @@
                 </form>
             </div>
         </div>
+        <footer-view class="el-footer"></footer-view>
+        </main>
     </div>
 
 </template>
@@ -27,11 +30,12 @@
 //   import axios from 'axios';
   import NavBarView from '@/components/NavBarView.vue'
   import axios from '../axios'; // 导入自定义的 Axios 实例
+  import FooterView from '@/components/FooterView.vue'
 //   import { ref } from 'vue';
   
   export default {
 
-    components: {NavBarView},
+    components: {NavBarView, FooterView},
     // setup() {
     //   const loginForm = ref({
     //     email: '',
@@ -103,4 +107,14 @@
   </script>
   
   <style>
+  .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
+
+  .row {
+    margin-top: 20px;
+  }
   </style>
