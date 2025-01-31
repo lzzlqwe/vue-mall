@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-container>
-          <nav-bar-view></nav-bar-view>
+          <nav-bar-view @update:search="func1" @click::button="search_click" @update:dropdown="func2" ></nav-bar-view>
           <div>
           <el-main>
             <el-row>
@@ -10,6 +10,14 @@
             </el-col>
             </el-row>
           </el-main>
+          <el-pagination 
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="[6, 12, 18, 24]"
+          background 
+          layout="sizes, prev, pager, next, total" 
+          :total="1000">
+          </el-pagination>
           </div>
           <el-footer>
             <footer-view></footer-view>
@@ -30,29 +38,70 @@ export default {
 
   data() {
     return {
-      products: []
+      products: [],
+      page: 1,
+      pageSize: 6,
+      name: null,
+      categoryId: null,
     }
   },
   mounted() {
-        // axios.get("https://apifoxmock.com/m2/5442790-5117933-default/257412739").then((result) => {
-        axios.get("/buyer/product/page", {
+        this.getProducts(this.page, this.pageSize, this.name, this.categoryId) // 假设初始页码为1，每页显示6条数据
+    },
+
+  methods: {
+    //封装分页查询商品的方法
+    getProducts(page, pageSize, name, categoryId){
+      axios.get("/buyer/product/page", {
             params: {
-                page: 1,
-                pageSize: 12,
-                name: null,
-                categoryId: null,
+                page: page,
+                pageSize: pageSize,
+                name: name,
+                categoryId: categoryId,
             }
         }).then((result) => {
             console.log("返回商品总数: ", result.data.data.total);
+            console.log("返回商品记录: ", result.data.data.records);
             this.products  = result.data.data.records;
         }).catch((error) => {
-            console.error('未携带token:', error);
+            console.error('未携带token, 请先登录:', error);
             this.$router.push({ name:'sign_in'}); 
         });
     },
 
-  methods: {
-    
+    //每页记录数变化
+    handleSizeChange:function(val){
+        this.pageSize = val;
+        this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+        console.log("每页记录数变化pageSize:" + val);
+    },
+
+    //页码发生变化
+    handleCurrentChange:function(val){
+        this.page = val;
+        this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+        console.log("页码发生变化page:" + val);
+    },
+
+    //接受子组件<nav-bar-view>传过来的search值
+    func1(val){
+      this.name = val;
+      console.log("搜索框的值:" + val);
+    },
+
+    //点击搜索按钮
+    search_click(){
+      this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+      console.log("点击搜索按钮");
+    },
+
+    //接受子组件<nav-bar-view>传过来的categoryId值
+    func2(val){
+      this.categoryId = val;
+      console.log("分类id的值:" + val);
+      this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+      console.log("分页查询");
+    },
   }
     
 }

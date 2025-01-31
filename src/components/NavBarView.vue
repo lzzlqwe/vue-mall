@@ -15,9 +15,10 @@
             Categories
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">T-shirt</a></li>
+              <li v-for="category in category_ls" :key="category" @click="input2(category.id)"><a class="dropdown-item" href="#">{{ category.name }}</a></li>
+            <!-- <li><a class="dropdown-item" href="#">T-shirt</a></li>
             <li><a class="dropdown-item" href="#">Phone</a></li>
-            <li><a class="dropdown-item" href="#">Foods</a></li>
+            <li><a class="dropdown-item" href="#">Foods</a></li> -->
           </ul>
         </li>
         <li class="nav-item">
@@ -25,8 +26,8 @@
         </li>
       </ul>
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search" @input="input1">
+        <button class="btn btn-outline-success" type="submit" @click="button_click">Search</button>
       </form>
       <div class="ms-3">
         <i class="fa-solid fa-cart-shopping fa-xl"></i>
@@ -49,6 +50,44 @@
 </template>
 
 <script>
+import axios from '../axios'; // 导入自定义的 Axios 实例
+
+export default {
+  name: 'NavBarView',
+  data() {
+    return {
+      search: '', //搜索框
+      category_ls: [],
+    }
+  },
+
+  mounted() {
+    axios.get("/buyer/category/list").then((result) => {
+        console.log("返回分类列表: ", result.data.data);
+        this.category_ls  = result.data.data;
+    }).catch((error) => {
+        console.error('错误:', error);
+    });
+  },
+
+  methods: {
+    //将子组件搜索框的值发送到父组件
+    input1() {
+      this.$emit('update:search', this.search)
+    },
+
+    //点击子组件按钮，通知父组件
+    button_click() {
+      this.$emit('click::button')
+    },
+
+    //将子组件下拉列表的值发送到父组件
+    input2(categoryId) {
+      this.$emit('update:dropdown', categoryId)
+    },
+  }
+}
+
 </script>
 
 
