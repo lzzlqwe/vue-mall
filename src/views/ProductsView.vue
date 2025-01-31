@@ -25,7 +25,7 @@
         </el-container>
 
       <!-- 弹框内容 -->
-      <el-dialog :title=productDetail.name :visible.sync="dialogVisible" width="50%">
+      <el-dialog :title=productDetail.name :visible.sync="dialogVisible" :before-close="handleClose" width="50%">
         <div class="dialog-content">
           <!-- 左侧图片 -->
           <div class="image-section">
@@ -46,7 +46,7 @@
             <!-- 数量选择 -->
             <div class="quantity">
               <span>数量：</span>
-              <el-input-number v-model="quantity" :min="1" />
+              <el-input-number size="small" v-model="productDetail.quantity" :min="1" />
             </div>
   
             <!-- 添加到购物车按钮 -->
@@ -81,7 +81,6 @@ export default {
 
       //商品详情弹框
       dialogVisible: false, // 控制弹框显示
-      quantity: 1, // 商品的默认数量
 
       //商品详情数据
       productDetail: {
@@ -92,6 +91,7 @@ export default {
         price: null, //商品价格
         picture: null, //图片
         description: null, //描述信息
+        quantity: null, // 商品的默认数量
       }
     }
   },
@@ -155,19 +155,50 @@ export default {
       console.log("分页查询");
     },
 
+    // // 打开弹框
+    // openDialog(productId) {
+    //   console.log("商品id:",productId);
+    //     // 根据商品id查询商品详情
+    //     axios.get(`/buyer/product/${productId}`).then((result) => {
+    //     this.productDetail = result.data.data;
+    //     console.log("返回商品详情信息: ", this.productDetail);
+
+    //     // 打开弹框
+    //     this.dialogVisible = true; 
+    //   }).catch((error) => {
+    //     console.error('查询商品错误:', error);
+    //   })
+    // },
     // 打开弹框
-    openDialog(productId) {
-      console.log("商品id:",productId);
-      // 根据商品id查询商品详情
-        axios.get(`/buyer/product/${productId}`).then((result) => {
-        this.productDetail = result.data.data;
+    async openDialog(productId) {
+      console.log("商品id:", productId);
+      try {
+        // 根据商品id查询商品详情
+        const response1 = await axios.get(`/buyer/product/${productId}`);
+        this.productDetail = response1.data.data;
         console.log("返回商品详情信息: ", this.productDetail);
 
-        // 打开弹框
-        this.dialogVisible = true; 
-      }).catch((error) => {
+        // 根据商品id查询购物车中商品数量
+        const response2 = await axios.get(`/buyer/shoppingCart/${productId}`);
+        this.productDetail.quantity = response2.data.data;
+        console.log("返回购物车中商品数量: ", this.productDetail.quantity);
+        if(!this.productDetail.quantity){ //如果购物车中没有该商品,则默认数量为1
+          this.productDetail.quantity = 1;
+        }
+
+        // 数据获取成功后显示对话框
+        this.dialogVisible = true;
+      } catch (error) {
         console.error('查询商品错误:', error);
-      })
+        // 可以在这里处理错误，比如显示错误消息
+        // this.$message.error('查询商品详情失败，请重试');
+      }
+    },
+
+    // 关闭弹框的处理
+    handleClose(done) {
+      done(); //关闭弹框
+      this.quantity = 1; //关闭弹框将后,对话框商品数量置为默认值
     },
     
     // 添加到购物车
