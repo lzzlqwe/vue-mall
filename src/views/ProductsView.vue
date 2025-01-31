@@ -46,7 +46,7 @@
             <!-- 数量选择 -->
             <div class="quantity">
               <span>数量：</span>
-              <el-input-number v-model="quantity" :min="0" />
+              <el-input-number v-model="quantity" :min="1" />
             </div>
   
             <!-- 添加到购物车按钮 -->
@@ -81,7 +81,7 @@ export default {
 
       //商品详情弹框
       dialogVisible: false, // 控制弹框显示
-      quantity: 0, // 商品的默认数量
+      quantity: 1, // 商品的默认数量
 
       //商品详情数据
       productDetail: {

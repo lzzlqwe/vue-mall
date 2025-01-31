@@ -48,7 +48,13 @@ export default {
   }
 
   .el-card {
-    margin:10px
+    margin:10px;
+    transition-duration: 300ms; /* 添加缓慢效果看起来更舒适 */
+  }
+
+  .el-card:hover {
+    margin-top:-3px;
+    transition-duration: 300ms;
   }
 
   .time {
