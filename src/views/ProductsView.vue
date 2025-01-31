@@ -93,9 +93,11 @@ export default {
     search_click(){
       this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
       console.log("点击搜索按钮");
+      this.name = null;
+      console.log("清空搜索框");
     },
 
-    //接受子组件<nav-bar-view>传过来的categoryId值
+    //接受子组件<nav-bar-view>传过来的categoryId值(所有分类时,categoryId值=0)
     func2(val){
       this.categoryId = val;
       console.log("分类id的值:" + val);

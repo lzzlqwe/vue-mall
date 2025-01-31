@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="#"><router-link to="/home" class="no-underline black-text">Home</router-link></a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -19,6 +19,8 @@
             <!-- <li><a class="dropdown-item" href="#">T-shirt</a></li>
             <li><a class="dropdown-item" href="#">Phone</a></li>
             <li><a class="dropdown-item" href="#">Foods</a></li> -->
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" @click="input2(null)">All products</a></li>
           </ul>
         </li>
         <li class="nav-item">
@@ -92,4 +94,11 @@ export default {
 
 
 <style>
+.no-underline {
+  text-decoration: none;
+}
+
+.black-text {
+  color: #000000A6;
+}
 </style>

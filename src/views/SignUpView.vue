@@ -21,7 +21,7 @@
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" v-model="registerForm.confirm_password">
                     </div>
                     <div class="mb-3">
-                        Already have a account, click here to <router-link to="/signin">Sign in</router-link>
+                        Already have a account, click here to <router-link to="/sign_in">Sign in</router-link>
                     </div>
                     <button class="btn btn-primary">Sign Up</button>
                 </form>

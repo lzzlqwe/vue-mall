@@ -13,7 +13,7 @@
                         <input type="password" class="form-control" id="password" name="password" v-model="loginForm.password">
                     </div>
                     <div class="mb-3">
-                        Don't have an account? Click here to <router-link to="/signup">Sign up</router-link>
+                        Don't have an account? Click here to <router-link to="/sign_up">Sign up</router-link>
                     </div>
                     <button class="btn btn-primary">Sign in</button>
                 </form>
