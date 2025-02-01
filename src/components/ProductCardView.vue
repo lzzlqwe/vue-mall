@@ -50,11 +50,11 @@ export default {
   .el-card {
     margin:10px;
     transition-duration: 300ms; /* 添加缓慢效果看起来更舒适 */
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 初始阴影 */
   }
 
   .el-card:hover {
-    margin-top:-3px;
-    transition-duration: 300ms;
+    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.5); /* 悬停阴影 */
   }
 
   .time {
