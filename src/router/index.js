@@ -1,42 +1,61 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+// router/index.js
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import ProductsView from '@/views/ProductsView.vue';
+import SignInView from '@/views/SignInView.vue';
+import SignUpView from '@/views/SignUpView.vue';
+import ShoppingCartView from '@/views/ShoppingCartView.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
     redirect: '/home'
   },
-
   {
     path: '/home',
     name: 'home',
-    component: () => import( '@/views/ProductsView.vue')
+    component: ProductsView,
+    meta: { requiresAuth: true }
   },
-
   {
     path: '/sign_in',
     name: 'sign_in',
-    component: () => import( '@/views/SignInView.vue')
+    component: SignInView,
+    meta: { requiresAuth: false }
   },
-
   {
     path: '/sign_up',
     name: 'sign_up',
-    component: () => import( '@/views/SignUpView.vue')
+    component: SignUpView,
+    meta: { requiresAuth: false }
   },
-
   {
     path: '/shopping_cart',
     name: 'shopping_cart',
-    component: () => import( '@/views/ShoppingCartView.vue')
+    component: ShoppingCartView,
+    meta: { requiresAuth: true }
   },
-
-]
+  {
+    path: '*',
+    redirect: '/home'
+  }
+];
 
 const router = new VueRouter({
   routes
-})
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const token = localStorage.getItem('token');
+
+  if (requiresAuth && !token) {
+    next({ name: 'sign_in' });
+  } else {
+    next();
+  }
+});
+
+export default router;

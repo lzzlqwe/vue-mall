@@ -71,13 +71,20 @@ import axios from '../axios'; // 导入自定义的 Axios 实例
 
 export default {
   name: 'NavBarView',
+
+  props: {
+    cartNum: {
+      type: Number,
+      default: 0
+    }, 
+  },
+
   data() {
     return {
       search: '', //搜索框
       category_ls: [],
       userId: null,
       username: null,
-      cartNum: 0,
     }
   },
 
@@ -115,12 +122,18 @@ export default {
     },
 
     //用户退出登录
-    logout() {
-      axios.post('/buyer/user/logout').then((res) => {
-              console.log('退出登录:', res.data);
-              localStorage.clear(); // 从 localStorage 删除 token, userId, username
-          }
-      )
+    // logout() {
+    //   axios.post('/buyer/user/logout').then((res) => {
+    //           console.log('退出登录:', res.data);
+    //           localStorage.clear(); // 从 localStorage 删除 token, userId, username
+    //           this.$router.push({ name: 'sign_in' });
+    //           this.$message.warning("退出登录");
+    //       }).catch((error) => {
+    //         console.error('退出登录失败:', error);
+    //       });
+    // }
+    logout(){
+      this.$emit('user::logout');
     }
 
   }
@@ -184,8 +197,8 @@ export default {
 
 .cart-badge {
   position: absolute;
-  top: 10px;
-  right: 100px;
+  top: 10.5%;
+  right: 5.8%;
   background-color: red;
   color: white;
   border-radius: 50%;

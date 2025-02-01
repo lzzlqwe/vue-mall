@@ -1,7 +1,8 @@
 <template>
     <div>
         <el-container>
-          <nav-bar-view @update:search="func1" @click::button="search_click" @update:dropdown="func2" ></nav-bar-view>
+          <nav-bar-view @update:search="func1" @click::button="search_click" 
+          @update:dropdown="func2" @user::logout="logout" :cartNum="cartNum" ></nav-bar-view>
           <div>
           <el-main style="min-height: calc(80vh);">
             <el-row>
@@ -92,11 +93,25 @@ export default {
         picture: null, //图片
         description: null, //描述信息
         quantity: null, // 商品的默认数量
-      }
+      },
+
+      //购物车红点显示的数字
+      cartNum: 0,
     }
   },
   mounted() {
+        //分页查询商品数据
         this.getProducts(this.page, this.pageSize, this.name, this.categoryId) // 假设初始页码为1，每页显示6条数据
+
+        //获取购物车中所有商品总数量
+        // axios.get("/buyer/shoppingCart/getCartNum").then((result) => {
+        //     console.log("返回购物车中所有商品总数量: ", result.data.data);
+        //     this.cartNum  = result.data.data;
+        // }).catch((error) => {
+        //     console.error('未携带token, 请先登录:', error);
+        //     this.$router.push({ name:'sign_in'}); 
+        //     this.$message.error("请先登录!");
+        // });
     },
 
   methods: {
@@ -202,6 +217,17 @@ export default {
       });
       this.dialogVisible = false; // 关闭弹框
     },
+
+    logout() {
+      axios.post('/buyer/user/logout').then((res) => {
+          console.log('退出登录:', res.data);
+          localStorage.clear(); // 从 localStorage 删除 token, userId, username
+          this.$router.push({ name: 'sign_in' });
+          this.$message.warning("退出登录");
+      }).catch((error) => {
+        console.error('退出登录失败:', error);
+      });
+    }
   }
     
 }

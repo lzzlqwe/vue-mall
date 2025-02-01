@@ -1,7 +1,7 @@
 <template>
     <div>
     <main>
-        <nav-bar-view></nav-bar-view>
+        <nav-bar-view @user::logout="logout"></nav-bar-view>
         <div class="shopping-cart" style="min-height: calc(80vh);">
             <el-table :data="cartItems" border style="width: 100%" v-loading="loading">
                 <!-- 商品列 -->
@@ -130,6 +130,17 @@ import FooterView from '@/components/FooterView.vue'
           this.$message.success("结算成功！");
         }
       },
+
+      logout() {
+        axios.post('/buyer/user/logout').then((res) => {
+            console.log('退出登录:', res.data);
+            localStorage.clear(); // 从 localStorage 删除 token, userId, username
+            this.$router.push({ name: 'sign_in' });
+            this.$message.warning("退出登录");
+        }).catch((error) => {
+          console.error('退出登录失败:', error);
+        });
+      }
     },
   };
   </script>
