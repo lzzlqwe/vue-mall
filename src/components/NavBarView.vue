@@ -11,7 +11,7 @@
           <a class="nav-link active" aria-current="page" href="#"><router-link to="/home" class="no-underline black-text">Home</router-link></a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" @click="getCategoryList">
             Categories
           </a>
           <ul class="dropdown-menu">
@@ -49,8 +49,8 @@
           <span>{{ username }}</span>
         </div>
         <ul class="dropdown-menu user-dropdown-menu">
-          <li><a class="dropdown-item user-dropdown-item" href=" ">Logout</a ></li>
           <li><a class="dropdown-item user-dropdown-item" href="#">Order</a ></li>
+          <li><a class="dropdown-item user-dropdown-item" href=" " @click="logout">Logout</a ></li>
         </ul>
       </div>
 
@@ -80,12 +80,6 @@ export default {
   },
 
   mounted() {
-    axios.get("/buyer/category/list").then((result) => {
-        console.log("返回分类列表: ", result.data.data);
-        this.category_ls  = result.data.data;
-    }).catch((error) => {
-        console.error('错误:', error);
-    });
 
     this.userId = localStorage.getItem('userId'); // 从 localStorage 获取 userId
     console.log("读取userId: ", this.userId);
@@ -94,6 +88,15 @@ export default {
   },
 
   methods: {
+    getCategoryList() {
+      axios.get("/buyer/category/list").then((result) => {
+          console.log("返回分类列表: ", result.data.data);
+          this.category_ls  = result.data.data;
+      }).catch((error) => {
+          console.error('错误:', error);
+      });
+    },
+
     //将子组件搜索框的值发送到父组件
     input1() {
       this.$emit('update:search', this.search)
@@ -108,6 +111,14 @@ export default {
     input2(categoryId) {
       this.$emit('update:dropdown', categoryId)
     },
+
+    //用户退出登录
+    logout() {
+      localStorage.removeItem('token', ''); // 从 localStorage 删除 token
+      localStorage.removeItem('userId'); // 从 localStorage 删除 userId
+      localStorage.removeItem('username'); // 从 localStorage 删除 username
+    }
+
   }
 }
 

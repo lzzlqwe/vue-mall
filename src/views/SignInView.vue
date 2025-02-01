@@ -98,6 +98,16 @@
                         // 保存 用户名
                         const username = res.data.data.username; // 用户名 存在于响应数据中
                         localStorage.setItem('username', username); // 保存 用户名
+
+                        // 设置20小时的有效期(对应后端的token有效期)
+                        const expire = 1000 * 60 * 60 * 20;
+                        setTimeout(() => {
+                            localStorage.removeItem('token', '');
+                            localStorage.removeItem('userId', '');
+                            localStorage.removeItem('username', '');
+                            console.log('超出有效期,移除token,userId,username');
+                        }, expire)
+
                         // 跳转到首页
                         console.log('登陆成功! 跳转到首页');
                         // this.$router.push('/home');
