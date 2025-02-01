@@ -91,6 +91,12 @@
                         // 保存 token
                         const token = res.data.data.token; // token 存在于响应数据中
                         localStorage.setItem('token', token); // 保存 token
+                        // 保存 用户id
+                        const userId = res.data.data.id; // 用户id 存在于响应数据中
+                        localStorage.setItem('userId', userId); // 保存 用户id
+                        // 保存 用户名
+                        const username = res.data.data.username; // 用户名 存在于响应数据中
+                        localStorage.setItem('username', username); // 保存 用户名
                         // 跳转到首页
                         console.log('跳转到首页');
                         // this.$router.push('/home');

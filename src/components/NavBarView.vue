@@ -38,12 +38,24 @@
       </div>
 
       <!-- 用户处于登录状态则显示这个 -->
-      <div class="ms-3">
+      <!-- <div class="ms-3" v-if="userId != null"> 
         <i class="fa-solid fa-user fa-xl"></i>
+      </div> -->
+
+      <!-- 用户处于登录状态则显示这个 -->
+      <div class="dropdown" v-if="userId != null">
+        <div class="ms-3" data-bs-toggle="dropdown" >
+          <i class="fa-solid fa-user fa-xl"></i>
+          <span>{{ username }}</span>
+        </div>
+        <ul class="dropdown-menu user-dropdown-menu">
+          <li><a class="dropdown-item user-dropdown-item" href=" ">Logout</a ></li>
+          <li><a class="dropdown-item user-dropdown-item" href="#">Order</a ></li>
+        </ul>
       </div>
 
       <!-- 用户未登录时 -->
-      <div class="ms-3">
+      <div class="ms-3" v-else>
         <router-link to="/sign_in">
           <button type="button" class="btn btn-primary">Sign In</button>
         </router-link>
@@ -62,6 +74,8 @@ export default {
     return {
       search: '', //搜索框
       category_ls: [],
+      userId: null,
+      username: null,
     }
   },
 
@@ -72,6 +86,11 @@ export default {
     }).catch((error) => {
         console.error('错误:', error);
     });
+
+    this.userId = localStorage.getItem('userId'); // 从 localStorage 获取 userId
+    console.log("读取userId: ", this.userId);
+    this.username = localStorage.getItem('username'); // 从 localStorage 获取 username
+    console.log("读取username: ", this.username);
   },
 
   methods: {
@@ -102,5 +121,16 @@ export default {
 
 .black-text {
   color: #000000A6;
+}
+
+
+.user-dropdown-menu {
+  min-width: 80px; /* 设置最小宽度 */
+  max-width: 100px; /* 设置最大宽度 */
+}
+
+.user-dropdown-item {
+  width: 100%; /* 确保每个下拉项占据整个下拉菜单的宽度 */
+  padding: 0.5rem 1rem; /* 可选：调整内边距 */
 }
 </style>
