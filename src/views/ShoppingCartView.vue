@@ -2,7 +2,7 @@
     <div>
     <main>
         <nav-bar-view></nav-bar-view>
-        <div class="shopping-cart" >
+        <div class="shopping-cart" style="min-height: calc(80vh);">
             <el-table :data="cartItems" border style="width: 100%" v-loading="loading">
                 <!-- 商品列 -->
                 <el-table-column label="Product" align="center">
@@ -60,9 +60,10 @@
 <script>
 import NavBarView from '@/components/NavBarView.vue';
 import axios from '../axios'; // 导入自定义的 Axios 实例
+import FooterView from '@/components/FooterView.vue'
 
   export default {
-  components: { NavBarView },
+  components: { NavBarView , FooterView},
     data() {
       return {
         loading: false, // 加载状态
@@ -106,7 +107,20 @@ import axios from '../axios'; // 导入自定义的 Axios 实例
       },
       // 清空购物车
       clearCart() {
-        this.cartItems = [];
+
+        axios.delete("/buyer/shoppingCart/clean").then((result) => {
+          if (result.data.code === 1) {
+            this.cartItems = [];
+            console.log('清空购物车成功:', result.data);
+            this.$message.warning("清空购物车");
+          }else{
+            this.$message.error("清空购物车失败");
+          }
+          
+        }).catch((error) => {
+            console.error('清空购物车失败:', error);
+            this.$message.error("清空购物车失败");
+        });
       },
       // 去结算
       checkout() {
@@ -147,5 +161,11 @@ import axios from '../axios'; // 导入自定义的 Axios 实例
   }
   .cart-count {
     color: #f56c6c;
+  }
+  .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
   }
   </style>
