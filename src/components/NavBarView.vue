@@ -31,10 +31,13 @@
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search" @input="input1">
         <button class="btn btn-outline-success" type="submit" @click="button_click">Search</button>
       </form>
+
       <div class="ms-3 cart-icon">
         <router-link to="/shopping_cart">
-          <i class="fa-solid fa-cart-shopping fa-xl"></i>
-          <span class="cart-badge" v-if="cartNum > 0">{{ cartNum }}</span>
+          <div class="cart-icon-container">
+            <i class="fa-solid fa-cart-shopping fa-xl"></i>
+            <span class="cart-badge" v-if="cartNum > 0">{{ cartNum }}</span>
+          </div>
         </router-link>
       </div>
 
@@ -75,7 +78,7 @@ export default {
   props: {
     cartNum: {
       type: Number,
-      default: 0
+      default: 5
     }, 
   },
 
@@ -195,10 +198,15 @@ export default {
   text-overflow: ellipsis; /* 显示省略号 */
 }
 
+.cart-icon-container {
+  position: relative; /* 设置父容器为相对定位 */
+  display: inline-block; /* 根据需要设置显示方式 */
+}
+
 .cart-badge {
-  position: absolute;
-  top: 10.5%;
-  right: 5.8%;
+  position: absolute; /* 设置徽章为绝对定位 */
+  top: -7px; /* 调整徽章相对于购物车图标的垂直位置 */
+  right: -8px; /* 调整徽章相对于购物车图标的水平位置 */
   background-color: red;
   color: white;
   border-radius: 50%;
@@ -208,6 +216,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+  z-index: 1; /* 确保徽章显示在购物车图标之上 */
 }
 </style>
