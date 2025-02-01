@@ -34,6 +34,7 @@
       <div class="ms-3 cart-icon">
         <router-link to="/shopping_cart">
           <i class="fa-solid fa-cart-shopping fa-xl"></i>
+          <span class="cart-badge" v-if="cartNum > 0">{{ cartNum }}</span>
         </router-link>
       </div>
 
@@ -76,6 +77,7 @@ export default {
       category_ls: [],
       userId: null,
       username: null,
+      cartNum: 0,
     }
   },
 
@@ -178,5 +180,21 @@ export default {
   white-space: nowrap; /* 防止文本换行 */
   overflow: hidden; /* 隐藏溢出的文本 */
   text-overflow: ellipsis; /* 显示省略号 */
+}
+
+.cart-badge {
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 </style>
