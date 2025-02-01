@@ -31,7 +31,7 @@
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search" @input="input1">
         <button class="btn btn-outline-success" type="submit" @click="button_click">Search</button>
       </form>
-      <div class="ms-3">
+      <div class="ms-3 cart-icon">
         <router-link to="/shopping_cart">
           <i class="fa-solid fa-cart-shopping fa-xl"></i>
         </router-link>
@@ -44,7 +44,7 @@
 
       <!-- 用户处于登录状态则显示这个 -->
       <div class="dropdown" v-if="userId != null">
-        <div class="ms-3" data-bs-toggle="dropdown" >
+        <div class="ms-3 logo_username" data-bs-toggle="dropdown" >
           <i class="fa-solid fa-user fa-xl"></i>
           <span>{{ username }}</span>
         </div>
@@ -132,5 +132,38 @@ export default {
 .user-dropdown-item {
   width: 100%; /* 确保每个下拉项占据整个下拉菜单的宽度 */
   padding: 0.5rem 1rem; /* 可选：调整内边距 */
+}
+
+.cart-icon .fa-cart-shopping {
+  color: #000000; /* 初始颜色 */
+  transition: color 0.3s ease; /* 添加过渡效果 */
+}
+
+.cart-icon .fa-cart-shopping:hover {
+  color:  #0D6EFD; /* 悬停颜色 */
+}
+
+.logo_username {
+  color: #000000; /* 初始颜色 */
+  transition: color 0.3s ease; /* 添加过渡效果 */
+
+  display: flex; /* 使用 Flexbox 布局 */
+  align-items: center; /* 垂直居中对齐 */
+  min-width: 80px; /* 设置最小宽度 */
+  max-width: 100px; /* 设置最大宽度 */
+}
+
+.logo_username:hover {
+  color:  #0D6EFD; /* 悬停颜色 */
+}
+
+.logo_username i {
+  margin-right: 0.3rem; /* 设置图标和文本之间的间隙 */
+}
+
+.logo_username span {
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden; /* 隐藏溢出的文本 */
+  text-overflow: ellipsis; /* 显示省略号 */
 }
 </style>
