@@ -11,7 +11,7 @@
                     <el-image
                         :src="scope.row.picture"
                         alt="商品图片"
-                        style="width: 100px; height: 100px; margin-right: 10px;"
+                        style="width: 80px; height: 80px; margin-right: 20px;"
                     />
                     <span>{{ scope.row.name }}</span>
                     </div>
@@ -21,7 +21,7 @@
                 <!-- 单价列 -->
                 <el-table-column label="Single price" align="center" width="250">
                 <template slot-scope="scope">
-                    ￥{{ scope.row.price.toFixed(2) }}
+                    ￥{{ scope.row.amount.toFixed(2) }}
                 </template>
                 </el-table-column>
         
@@ -36,7 +36,7 @@
                 <!-- 小计列 -->
                 <el-table-column label="Subtotal" align="center" width="250">
                 <template slot-scope="scope">
-                    ￥{{ (scope.row.price * scope.row.quantity).toFixed(2) }}
+                    ￥{{ (scope.row.amount * scope.row.quantity).toFixed(2) }}
                 </template>
                 </el-table-column>
         
@@ -46,7 +46,7 @@
             <div class="cart-footer">
                 <el-button type="danger" @click="clearCart">Empty Cart</el-button>
                 <div class="cart-summary">
-                    {{ totalItems }} items have been selected. Total:
+                    <strong class="cart-count">{{ totalItems }}</strong> items have been selected. Total:
                 <span class="total-price">￥{{ totalPrice.toFixed(2) }}</span>
                 </div>
                 <el-button type="primary" @click="checkout">Check out</el-button>
@@ -59,33 +59,33 @@
   
 <script>
 import NavBarView from '@/components/NavBarView.vue';
+import axios from '../axios'; // 导入自定义的 Axios 实例
 
   export default {
   components: { NavBarView },
     data() {
       return {
         loading: false, // 加载状态
-        cartItems: [
-          {
-            name: "朵唯(DOOV) X11Pro 安卓智能手机 绿色",
-            picture: "https://via.placeholder.com/80",
-            price: 4542.0,
-            quantity: 3,
-          },
-          {
-            name: "其他商品示例",
-            picture: "https://via.placeholder.com/80",
-            price: 1234.0,
-            quantity: 2,
-          },
-        ],
+        cartItems: [],
       };
     },
+
+    mounted() {
+      axios.get("/buyer/shoppingCart/list").then((result) => {
+            console.log("返回购物车记录数: ", result.data.data.length);
+            console.log("返回购物车记录: ", result.data.data);
+            this.cartItems  = result.data.data;
+        }).catch((error) => {
+            console.error('未携带token, 请先登录:', error);
+            this.$router.push({ name:'sign_in'}); 
+        });
+    },
+
     computed: {
       // 计算总价
       totalPrice() {
         return this.cartItems.reduce(
-          (sum, item) => sum + item.price * item.quantity,
+          (sum, item) => sum + item.amount * item.quantity,
           0
         );
       },
@@ -121,7 +121,7 @@ import NavBarView from '@/components/NavBarView.vue';
   
   <style>
   .shopping-cart {
-    width: 90%;
+    width: 80%;
     margin: 20px auto;
   }
   .product-info {
@@ -136,10 +136,15 @@ import NavBarView from '@/components/NavBarView.vue';
   }
   .cart-summary {
     font-size: 16px;
+    margin-left: auto;
+    margin-right: 20px;
   }
   .total-price {
     font-size: 18px;
     font-weight: bold;
+    color: #f56c6c;
+  }
+  .cart-count {
     color: #f56c6c;
   }
   </style>

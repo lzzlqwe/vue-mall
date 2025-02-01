@@ -32,7 +32,9 @@
         <button class="btn btn-outline-success" type="submit" @click="button_click">Search</button>
       </form>
       <div class="ms-3">
-        <i class="fa-solid fa-cart-shopping fa-xl"></i>
+        <router-link to="/shopping_cart">
+          <i class="fa-solid fa-cart-shopping fa-xl"></i>
+        </router-link>
       </div>
 
       <!-- 用户处于登录状态则显示这个 -->

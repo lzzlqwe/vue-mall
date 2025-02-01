@@ -27,6 +27,12 @@ const routes = [
     component: () => import( '@/views/SignUpView.vue')
   },
 
+  {
+    path: '/shopping_cart',
+    name: 'shopping_cart',
+    component: () => import( '@/views/ShoppingCartView.vue')
+  },
+
 ]
 
 const router = new VueRouter({
