@@ -114,9 +114,11 @@ export default {
 
     //用户退出登录
     logout() {
-      localStorage.removeItem('token', ''); // 从 localStorage 删除 token
-      localStorage.removeItem('userId'); // 从 localStorage 删除 userId
-      localStorage.removeItem('username'); // 从 localStorage 删除 username
+      axios.post('/buyer/user/logout').then((res) => {
+              console.log('退出登录:', res.data);
+              localStorage.clear(); // 从 localStorage 删除 token, userId, username
+          }
+      )
     }
 
   }
