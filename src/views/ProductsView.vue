@@ -103,15 +103,8 @@ export default {
         //分页查询商品数据
         this.getProducts(this.page, this.pageSize, this.name, this.categoryId) // 假设初始页码为1，每页显示6条数据
 
-        //获取购物车中所有商品总数量
-        // axios.get("/buyer/shoppingCart/getCartNum").then((result) => {
-        //     console.log("返回购物车中所有商品总数量: ", result.data.data);
-        //     this.cartNum  = result.data.data;
-        // }).catch((error) => {
-        //     console.error('未携带token, 请先登录:', error);
-        //     this.$router.push({ name:'sign_in'}); 
-        //     this.$message.error("请先登录!");
-        // });
+        // 获取购物车中所有商品总数量
+        this.fetchCartNum();
     },
 
   methods: {
@@ -133,6 +126,18 @@ export default {
             this.$router.push({ name:'sign_in'}); 
             this.$message.error("请先登录!");
         });
+    },
+
+     // 获取购物车中所有商品总数量
+     fetchCartNum() {
+      axios.get("/buyer/shoppingCart/getCartNum").then((result) => {
+        console.log("返回购物车中所有商品总数量: ", result.data.data);
+        this.cartNum = parseInt(result.data.data, 10);
+      }).catch((error) => {
+        console.error('获取购物车数量失败:', error);
+        // 可以在这里处理错误，比如显示错误消息
+        this.$message.error("获取购物车数量失败，请重试!");
+      });
     },
 
     //每页记录数变化
@@ -210,6 +215,8 @@ export default {
           console.error('请求错误:', error);
       });
 
+      // 获取购物车中所有商品总数量
+      this.fetchCartNum();
 
       this.$message({
         message: `Added ${this.productDetail.quantity} ${this.productDetail.name}(s) to the cart!`,

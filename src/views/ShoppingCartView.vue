@@ -1,7 +1,7 @@
 <template>
     <div>
     <main>
-        <nav-bar-view @user::logout="logout"></nav-bar-view>
+        <nav-bar-view @user::logout="logout" :cartNum="cartNum"></nav-bar-view>
         <div class="shopping-cart" style="min-height: calc(80vh);">
             <el-table :data="cartItems" border style="width: 100%" v-loading="loading">
                 <!-- 商品列 -->
@@ -68,10 +68,13 @@ import FooterView from '@/components/FooterView.vue'
       return {
         loading: false, // 加载状态
         cartItems: [],
+        //购物车红点显示的数字
+        cartNum: 0,
       };
     },
 
     mounted() {
+      //获取购物车中所有商品
       axios.get("/buyer/shoppingCart/list").then((result) => {
             console.log("返回购物车记录数: ", result.data.data.length);
             console.log("返回购物车记录: ", result.data.data);
@@ -81,6 +84,9 @@ import FooterView from '@/components/FooterView.vue'
             this.$router.push({ name:'sign_in'}); 
             this.$message.error("请先登录!");
         });
+
+        //获取购物车中所有商品总数量
+        this.fetchCartNum();
     },
 
     computed: {
@@ -97,6 +103,17 @@ import FooterView from '@/components/FooterView.vue'
       },
     },
     methods: {
+      // 获取购物车中所有商品总数量
+      fetchCartNum() {
+        axios.get("/buyer/shoppingCart/getCartNum").then((result) => {
+          console.log("返回购物车中所有商品总数量: ", result.data.data);
+          this.cartNum = parseInt(result.data.data, 10);
+        }).catch((error) => {
+          console.error('获取购物车数量失败:', error);
+          // 可以在这里处理错误，比如显示错误消息
+          this.$message.error("获取购物车数量失败，请重试!");
+        });
+      },
       // 更新总价
       updateTotal() {
         this.$forceUpdate(); // 强制刷新视图
@@ -113,6 +130,9 @@ import FooterView from '@/components/FooterView.vue'
             this.cartItems = [];
             console.log('清空购物车成功:', result.data);
             this.$message.warning("清空购物车");
+
+            //获取购物车中所有商品总数量
+            this.fetchCartNum();
           }else{
             this.$message.error("清空购物车失败");
           }

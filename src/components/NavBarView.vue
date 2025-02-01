@@ -78,7 +78,7 @@ export default {
   props: {
     cartNum: {
       type: Number,
-      default: 5
+      default: 0
     }, 
   },
 
