@@ -183,6 +183,18 @@ export default {
     
     // 添加到购物车
     addToCart() {
+      axios.post('/buyer/shoppingCart/add', {
+        productId: this.productDetail.id,
+        quantity: this.productDetail.quantity,
+      }).then((res) => {
+          console.log('添加购物车响应:', res.data);
+          
+      }
+      ).catch((error) => {
+          console.error('请求错误:', error);
+      });
+
+
       this.$message({
         message: `Added ${this.productDetail.quantity} ${this.productDetail.name}(s) to the cart!`,
         type: "success",
