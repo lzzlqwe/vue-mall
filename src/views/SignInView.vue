@@ -85,7 +85,8 @@
                 (res) => {
                     console.log('响应:', res.data);
                     if (res.data.code === 0) { // 账号不存在或者密码错误
-                        alert(res.data.msg);
+                        // alert(res.data.msg);
+                        this.$message.error(res.data.msg);
                     } else {
                         // 登录成功
                         // 保存 token
@@ -98,13 +99,15 @@
                         const username = res.data.data.username; // 用户名 存在于响应数据中
                         localStorage.setItem('username', username); // 保存 用户名
                         // 跳转到首页
-                        console.log('跳转到首页');
+                        console.log('登陆成功! 跳转到首页');
                         // this.$router.push('/home');
                         this.$router.push({ name:'home'}); //还可以携带参数跳转到首页，可根据id来选择展示右上角图标
+                        this.$message.success("Welcome to Tiktok Mall !")
                     }
                 }
             ).catch((error) => {
                 console.error('请求错误:', error);
+                this.$message.error('请求错误:', error);
             });
         }
     }

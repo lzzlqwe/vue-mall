@@ -61,7 +61,8 @@
                 (res) => {
                     console.log('响应:', res.data);
                     if (res.data.code === 0) { 
-                        alert(res.data.msg);
+                        // alert(res.data.msg);
+                        this.$message.error(res.data.msg);
                     } else {
                         // 注册成功
                         // 跳转到登录界面
@@ -71,6 +72,7 @@
                 }
             ).catch((error) => {
                 console.error('请求错误:', error);
+                this.$message.error('请求错误:', error);
             });
         }
     }
