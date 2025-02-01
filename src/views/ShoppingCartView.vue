@@ -78,6 +78,7 @@ import axios from '../axios'; // 导入自定义的 Axios 实例
         }).catch((error) => {
             console.error('未携带token, 请先登录:', error);
             this.$router.push({ name:'sign_in'}); 
+            this.$message.error("请先登录!");
         });
     },
 

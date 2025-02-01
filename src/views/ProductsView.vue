@@ -116,6 +116,7 @@ export default {
         }).catch((error) => {
             console.error('未携带token, 请先登录:', error);
             this.$router.push({ name:'sign_in'}); 
+            this.$message.error("请先登录!");
         });
     },
 
@@ -177,7 +178,7 @@ export default {
       } catch (error) {
         console.error('查询商品错误:', error);
         // 可以在这里处理错误，比如显示错误消息
-        // this.$message.error('查询商品详情失败，请重试');
+        this.$message.error('查询商品详情失败，请重试');
       }
     },
     
