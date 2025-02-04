@@ -1,4 +1,5 @@
 <template>
+  <div class="card">
     <el-card :body-style="{ padding: '0px'}">
     <img :src=product.picture class="image" @click="openDialog">
     <div style="padding: 14px;" @click="openDialog">
@@ -11,6 +12,7 @@
         </div>
     </div>
     </el-card>
+  </div>
 </template>
 
 <script>
@@ -47,13 +49,13 @@ export default {
     -webkit-line-clamp:2;
   }
 
-  .el-card {
+  .card {
     margin:10px;
     transition-duration: 300ms; /* 添加缓慢效果看起来更舒适 */
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 初始阴影 */
   }
 
-  .el-card:hover {
+  .card:hover {
     box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.5); /* 悬停阴影 */
   }
 
