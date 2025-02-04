@@ -49,10 +49,14 @@ export default {
     data() {
         return {
             order: {
-                id: 123456,
-                orderAmount: 19.99, // 应付金额
-                orderNumber: '202302040001', // 订单号
-                orderTime: '2025-02-04 12:34:56' // 下单时间
+                // id: 123456,
+                // orderAmount: 19.99, // 应付金额
+                // orderNumber: '202302040001', // 订单号
+                // orderTime: '2025-02-04 12:34:56' // 下单时间
+                id: this.$route.params.orderId,
+                orderAmount: this.$route.params.orderAmount, // 应付金额
+                orderNumber: this.$route.params.orderNumber, // 订单号
+                orderTime: this.$route.params.orderTime // 下单时间
             },
             payMethod: 1
         };

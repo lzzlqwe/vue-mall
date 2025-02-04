@@ -6,6 +6,7 @@ import SignInView from '@/views/SignInView.vue';
 import SignUpView from '@/views/SignUpView.vue';
 import ShoppingCartView from '@/views/ShoppingCartView.vue';
 import SubmitOrderView from '@/views/SubmitOrderView.vue';
+import PaymentView from '@/views/PaymentView.vue';
 
 Vue.use(VueRouter);
 
@@ -42,6 +43,12 @@ const routes = [
     path: '/submit_order',
     name: 'submit_order',
     component: SubmitOrderView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/payment',
+    name: 'payment',
+    component: PaymentView,
     meta: { requiresAuth: true }
   },
   {

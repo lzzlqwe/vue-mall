@@ -2,7 +2,7 @@
     <div>
         <main>
         <nav-bar-view></nav-bar-view>
-        <div class="row justify-content-center" style="min-height: calc(80vh);">
+        <div class="SignUpForm row justify-content-center" style="min-height: calc(80vh);">
             <div class="col-4">
                 <form @submit.prevent="submitForm">
                     <div class="mb-3">
@@ -88,7 +88,7 @@
     line-height: 60px;
   }
 
-  .row {
-    margin-top: 20px;
+  .SignUpForm {
+    padding-top: 20px;
   }
   </style>

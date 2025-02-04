@@ -51,7 +51,7 @@
                         <p>x{{ cartItem.quantity }}</p>
                     </el-col>
                     <el-col :span="3">
-                        <p style="color:#f56c6c">￥{{ cartItem.amount * cartItem.quantity}}</p>
+                        <p style="color:#f56c6c">￥{{ (cartItem.amount * cartItem.quantity).toFixed(2)}}</p>
                     </el-col>
                     </el-row>
                 </el-card>
@@ -85,7 +85,7 @@
       data() {
         return {
           // 选中的地址索引
-          selectedAddressIndex: 0,
+          selectedAddressIndex: 0, //0表示初始时选中第一个地址
           //购物车红点显示的数字
           cartNum: 0,
           addresses: [],
@@ -138,13 +138,39 @@
       methods: {
         selectAddress(index) {
           this.selectedAddressIndex = index;
+          console.log("选中地址索引:", this.selectedAddressIndex);
         },
 
         //提交订单
         submitOrder() {
           //提交totalPrice.toFixed(2)和selectedAddressIndex
           console.log("提交订单:", this.totalPrice.toFixed(2), this.selectedAddressIndex);
-          this.$message.success('订单提交成功！');
+          axios.post('/buyer/order/submit', {
+            "addressBookId": this.addresses[this.selectedAddressIndex].id,
+            "amount": this.totalPrice.toFixed(2),
+          }).then(
+                (res) => {
+                    console.log('响应:', res.data);
+                    if (res.data.code === 0) { 
+                        this.$message.error(res.data.msg);
+                    } else {
+                        // 提交订单成功，跳转到订单支付界面
+                        this.$message.success('订单提交成功，请支付！');
+                        console.log('跳转到订单支付界面');
+                        //跳转到订单支付界面，并携带参数
+                        this.$router.push({ name:'payment', params: { 
+                          orderId: res.data.data.id,  //订单id
+                          orderNumber: res.data.data.orderNumber,  //订单号（对应orders表number字段）
+                          orderAmount: res.data.data.orderAmount,  //订单金额（对应orders表amount字段）
+                          orderTime: res.data.data.orderTime,   //下单时间
+                        } }); 
+                    }
+                }
+            ).catch((error) => {
+                console.error('请求错误:', error);
+                this.$message.error('请求错误:', error);
+            });
+          
         },
 
         //添加地址
