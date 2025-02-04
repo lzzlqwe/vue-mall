@@ -17,7 +17,7 @@
           :page-sizes="[6, 12, 18, 24]"
           background 
           layout="sizes, prev, pager, next, total" 
-          :total="1000">
+          :total=this.total>
           </el-pagination>
           </div>
           <el-footer>
@@ -72,7 +72,8 @@ export default {
   data() {
     return {
       //商品列表
-      products: [],
+      total: 0, //总记录数
+      products: [], //page_records, 当前页数据集合
 
       //分页查询参数
       page: 1,
@@ -120,6 +121,7 @@ export default {
             console.log("返回商品总数: ", result.data.data.total);
             console.log("返回商品记录: ", result.data.data.records);
             this.products  = result.data.data.records;
+            this.total = result.data.data.total;
         }).catch((error) => {
             console.error('未携带token, 请先登录:', error);
             this.$router.push({ name:'sign_in'}); 
