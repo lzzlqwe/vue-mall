@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-container>
-          <nav-bar-view @update:search="func1" @click::button="search_click" 
+          <nav-bar-view @click::button="search_click" 
           @update:dropdown="func2" @user::logout="logout" :cartNum="cartNum" ></nav-bar-view>
           <div>
           <el-main style="min-height: calc(80vh);">
@@ -77,7 +77,6 @@ export default {
       //分页查询参数
       page: 1,
       pageSize: 6,
-      name: null,
       categoryId: null,
 
       //商品详情弹框
@@ -101,7 +100,7 @@ export default {
   },
   mounted() {
         //分页查询商品数据
-        this.getProducts(this.page, this.pageSize, this.name, this.categoryId) // 假设初始页码为1，每页显示6条数据
+        this.getProducts(this.page, this.pageSize, null, this.categoryId) // 假设初始页码为1，每页显示6条数据
 
         // 获取购物车中所有商品总数量
         this.fetchCartNum();
@@ -143,28 +142,21 @@ export default {
     //每页记录数变化
     handleSizeChange:function(val){
         this.pageSize = val;
-        this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+        this.getProducts(this.page, this.pageSize, null, this.categoryId)
         console.log("每页记录数变化pageSize:" + val);
     },
 
     //页码发生变化
     handleCurrentChange:function(val){
         this.page = val;
-        this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+        this.getProducts(this.page, this.pageSize, null, this.categoryId)
         console.log("页码发生变化page:" + val);
     },
 
-    //接受子组件<nav-bar-view>传过来的search值
-    func1(val){
-      this.name = val;
-      console.log("搜索框的值:" + val);
-    },
-
     //点击搜索按钮
-    search_click(){
-      this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+    search_click(val){
+      this.getProducts(this.page, this.pageSize, val, this.categoryId)
       console.log("点击搜索按钮");
-      this.name = null;
       console.log("清空搜索框");
     },
 
@@ -172,7 +164,7 @@ export default {
     func2(val){
       this.categoryId = val;
       console.log("分类id的值:" + val);
-      this.getProducts(this.page, this.pageSize, this.name, this.categoryId)
+      this.getProducts(this.page, this.pageSize, null, this.categoryId)
       console.log("分页查询");
     },
 

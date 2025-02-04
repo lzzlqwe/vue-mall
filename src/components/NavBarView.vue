@@ -28,7 +28,7 @@
         </li>
       </ul>
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search" @input="input1">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search">
         <button class="btn btn-outline-success" type="submit" @click="button_click">Search</button>
       </form>
 
@@ -84,7 +84,7 @@ export default {
 
   data() {
     return {
-      search: '', //搜索框
+      search: null, //搜索框
       category_ls: [],
       userId: null,
       username: null,
@@ -109,14 +109,10 @@ export default {
       });
     },
 
-    //将子组件搜索框的值发送到父组件
-    input1() {
-      this.$emit('update:search', this.search)
-    },
-
     //点击子组件按钮，通知父组件
     button_click() {
-      this.$emit('click::button')
+      this.$emit('click::button', this.search);
+      this.search = null; //清空搜索框的内容
     },
 
     //将子组件下拉列表的值发送到父组件
