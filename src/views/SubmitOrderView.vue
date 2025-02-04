@@ -2,11 +2,11 @@
     <div>    
         <main>
           <!-- 导航栏 -->
-          <nav-bar-view ></nav-bar-view>
+          <nav-bar-view @user::logout="logout" :cartNum="cartNum"></nav-bar-view>
           <div class="order-container" style="min-height: calc(80vh);">
             <!-- 地址栏 -->
             <section>
-            <h4>Address information</h4>
+            <h4>Receipt information</h4>
             <el-row :gutter="20" class="address-section">
                 <el-col v-for="(address, index) in addresses" :key="index" :span="6">
                   <div :class="{'selected-address': selectedAddressIndex === index}" @click="selectAddress(index)">
@@ -22,7 +22,7 @@
                     </el-card>
                   </div>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="4">
                 <el-button type="dashed" icon="el-icon-plus" @click="addAddress">add new address</el-button>
                 </el-col>
             </el-row>
@@ -32,26 +32,26 @@
               <div class="product-info">
                 <h4>Product information</h4>
               </div>
-                <el-card v-for="(product, index) in products" :key="index" class="product-card">
+                <el-card v-for="(cartItem, index) in cartItems" :key="index" class="product-card">
                     <el-row>
                     <el-col :span="4">
                         <el-image
-                          :src="product.picture"
+                          :src="cartItem.picture"
                           alt="商品图片"
                           style="width: 80px; height: 80px; margin-right: 10px;"
                         />
                     </el-col>
                     <el-col :span="11">
-                        <h5>{{ product.name }}</h5>
+                        <h5>{{ cartItem.name }}</h5>
                     </el-col>
                     <el-col :span="3">
-                        <p>￥{{ product.amount }}</p>
+                        <p>￥{{ cartItem.amount }}</p>
                     </el-col>
                     <el-col :span="3">
-                        <p>x{{ product.quantity }}</p>
+                        <p>x{{ cartItem.quantity }}</p>
                     </el-col>
                     <el-col :span="3">
-                        <p style="color:#f56c6c">￥40.99</p>
+                        <p style="color:#f56c6c">￥{{ cartItem.amount * cartItem.quantity}}</p>
                     </el-col>
                     </el-row>
                 </el-card>
@@ -59,10 +59,12 @@
 
             <!-- 底部 -->
             <div class="order-footer">
-                <!-- 订单统计 -->
-
-                <!-- 提交订单 -->
                 <section class="submit-section">
+                  <!-- 配送地址 -->
+                  <span span class="shipping-address">配送至:  {{addresses[selectedAddressIndex].province+addresses[selectedAddressIndex].city+addresses[selectedAddressIndex].detail}}</span>
+                  <!-- 订单统计 -->
+                  <span span class="total-price">￥{{ totalPrice.toFixed(2) }}  </span>
+                  <!-- 提交订单 -->
                   <el-button type="primary" size="large" @click="submitOrder">Submit Order</el-button>
                 </section>
             </div>
@@ -76,64 +78,102 @@
   <script>
   import NavBarView from '@/components/NavBarView.vue';
   import FooterView from '@/components/FooterView.vue';
+  import axios from '../axios'; // 导入自定义的 Axios 实例
 
   export default {
   components: { NavBarView, FooterView },
       data() {
         return {
+          // 选中的地址索引
           selectedAddressIndex: 0,
-          addresses: [
-            {
-              username: '张三',
-              email: '13011111111',
-              detail: '北京市朝阳区豆各庄店青青家园万科青家园1',
-              city: '北京市',
-              province: '北京',
-              label: '家'
-            },
-            {
-              username: '李四',
-              email: '13022222222',
-              detail: '上海市浦东新区世纪大道花园小区2号楼',
-              city: '上海市',
-              province: '上海',
-              label: '公司'
-            },
-            {
-              username: '王五',
-              email: '13033333333',
-              detail: '深圳市南山区科技园北区腾讯大厦',
-              city: '深圳市',
-              province: '广东',
-              label: '学校'
-            }
-          ],
-          products: [
-            {
-              name: '游标 无线蓝牙耳机双耳入耳运动蓝牙耳机',
-              picture: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.dMG5DDVshpKXyxsb7jMyUwHaHa?w=202&h=202&c=7&r=0&o=5&dpr=1.5&pid=1.7',
-              quantity: 1,
-              amount: 29.00
-            },
-            {
-              name: '朵唯（DOOV）X11Pro 安卓智能手机 绿色',
-              picture: 'https://tse2-mm.cn.bing.net/th/id/OIP-C.WIrbwBdgo1OcoSbtERQNPwHaHa?w=185&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7',
-              quantity: 1,
-              amount: 4542.00
-            }
-          ]
+          //购物车红点显示的数字
+          cartNum: 0,
+          addresses: [],
+          cartItems: [],
+          
         };
       },
+
+      mounted() {
+        //获取地址簿中所有地址
+        axios.get("/buyer/addressBook/list").then((result) => {
+              console.log("返回地址数: ", result.data.data.length);
+              console.log("返回地址: ", result.data.data);
+              this.addresses  = result.data.data;
+          }).catch((error) => {
+              console.error('未携带token, 请先登录:', error);
+              this.$router.push({ name:'sign_in'}); 
+              this.$message.error("请先登录!");
+          });
+
+        //获取购物车中所有商品
+        axios.get("/buyer/shoppingCart/list").then((result) => {
+              console.log("返回购物车记录数: ", result.data.data.length);
+              console.log("返回购物车记录: ", result.data.data);
+              this.cartItems  = result.data.data;
+          }).catch((error) => {
+              console.error('未携带token, 请先登录:', error);
+              this.$router.push({ name:'sign_in'}); 
+              this.$message.error("请先登录!");
+          });
+
+        //获取购物车中所有商品总数量
+        this.fetchCartNum();
+      },
+
+      computed: {
+        // 计算总价
+        totalPrice() {
+          return this.cartItems.reduce(
+            (sum, item) => sum + item.amount * item.quantity,
+            0
+          );
+        },
+        // 计算总商品数
+        totalItems() {
+          return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        },
+      },
+
       methods: {
         selectAddress(index) {
           this.selectedAddressIndex = index;
         },
+
+        //提交订单
         submitOrder() {
+          //提交totalPrice.toFixed(2)和selectedAddressIndex
+          console.log("提交订单:", this.totalPrice.toFixed(2), this.selectedAddressIndex);
           this.$message.success('订单提交成功！');
         },
+
+        //添加地址
         addAddress() {
           this.$message.warning('地址添加已达上限！');
-        }
+        },
+
+        //退出登录
+        logout() {
+          axios.post('/buyer/user/logout').then((res) => {
+              console.log('退出登录:', res.data);
+              localStorage.clear(); // 从 localStorage 删除 token, userId, username
+              this.$router.push({ name: 'sign_in' });
+              this.$message.warning("退出登录");
+          }).catch((error) => {
+            console.error('退出登录失败:', error);
+          });
+        },
+        // 获取购物车中所有商品总数量
+        fetchCartNum() {
+          axios.get("/buyer/shoppingCart/getCartNum").then((result) => {
+            console.log("返回购物车中所有商品总数量: ", result.data.data);
+            this.cartNum = parseInt(result.data.data, 10);
+          }).catch((error) => {
+            console.error('获取购物车数量失败:', error);
+            // 可以在这里处理错误，比如显示错误消息
+            this.$message.error("获取购物车数量失败，请重试!");
+          });
+        },
       }
     };
   </script>
@@ -151,7 +191,11 @@
     font-weight: bold;
   }
   .address-detail{
-    min-height: 50px; /* 最小高度 */
+    
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
   .address-section {
     margin-bottom: 20px;
@@ -169,7 +213,6 @@
     /* border: 2px solid #409EFF; */
     /* border: 2px solid orange;
     box-shadow: 0 4px 8px rgba(255, 165, 0, 0.5); */
-
     border: 2px solid lightblue;
     box-shadow: 0 4px 8px rgba(137, 160, 229, 0.5);
   }
@@ -179,6 +222,11 @@
   .submit-section {
     text-align: right;
     margin-top: 20px;
+  }
+  .total-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f56c6c;
   }
   .el-footer {
     background-color: #B3C0D1;
@@ -198,5 +246,13 @@
     line-height: 16px;
     text-align: center;
     border-radius: 50%;
+  }
+  .shipping-address{
+    margin-right: 20px;
+    font-size: 12px;
+    color: gray;
+  }
+  .total-price{
+    margin-right: 20px;
   }
 </style>

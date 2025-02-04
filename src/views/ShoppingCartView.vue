@@ -49,7 +49,9 @@
                     <strong class="cart-count">{{ totalItems }}</strong> items have been selected. Total:
                 <span class="total-price">￥{{ totalPrice.toFixed(2) }}</span>
                 </div>
-                <el-button type="primary" @click="checkout">Check out</el-button>
+                <router-link to="/submit_order">
+                  <el-button type="primary" @click="checkout">Check out</el-button>
+                </router-link>
             </div>
         </div>
         <footer-view class="el-footer"></footer-view>
@@ -147,7 +149,7 @@ import FooterView from '@/components/FooterView.vue'
         if (this.cartItems.length === 0) {
           this.$message.warning("购物车为空，请添加商品！");
         } else {
-          this.$message.success("结算成功！");
+          this.$message.success("订单生成中...");
         }
       },
 

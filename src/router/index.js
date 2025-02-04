@@ -5,6 +5,7 @@ import ProductsView from '@/views/ProductsView.vue';
 import SignInView from '@/views/SignInView.vue';
 import SignUpView from '@/views/SignUpView.vue';
 import ShoppingCartView from '@/views/ShoppingCartView.vue';
+import SubmitOrderView from '@/views/SubmitOrderView.vue';
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,12 @@ const routes = [
     path: '/shopping_cart',
     name: 'shopping_cart',
     component: ShoppingCartView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/submit_order',
+    name: 'submit_order',
+    component: SubmitOrderView,
     meta: { requiresAuth: true }
   },
   {
