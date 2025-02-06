@@ -53,7 +53,7 @@
           <span>{{ username }}</span>
         </div>
         <ul class="dropdown-menu user-dropdown-menu">
-          <li><a class="dropdown-item user-dropdown-item" href="#">Order</a ></li>
+          <li><router-link to="/order_list" class="no-underline"><a class="dropdown-item user-dropdown-item" href="#">Order</a ></router-link></li>
           <li><a class="dropdown-item user-dropdown-item" href=" " @click="logout">Logout</a ></li>
         </ul>
       </div>

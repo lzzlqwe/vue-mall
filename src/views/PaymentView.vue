@@ -126,9 +126,10 @@ export default {
             this.$router.push({ name: 'home' });
         },
 
+        //跳转到历史订单界面
         func2() {
             this.centerDialogVisible = false;
-            // this.$router.push({ path: '/' });
+            this.$router.push({ name: '/order_list' });
         },
     }
 };
