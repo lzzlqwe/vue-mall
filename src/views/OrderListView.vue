@@ -18,10 +18,10 @@
             <!-- 商品列表与店铺和买家信息 -->
             <div class="row">
               <!-- 商品列表 -->
-              <div class="col-md-6" style="padding-left: 3%;" >
+              <div class="col-md-4" style="padding-left: 3%;" >
                 <div v-for="product in order.products" :key="product.productId" class="row align-items-center mb-3">
                   <!-- 商品图片 -->
-                  <div class="col-md-2 text-center">
+                  <div class="col-md-4 text-center">
                     <img
                       :src="product.picture"
                       class="img-fluid rounded"
@@ -30,12 +30,23 @@
                     />
                   </div>
                   <!-- 商品信息 -->
-                  <div class="col-md-10">
+                  <div class="col-md-8">
                     <h5 class="card-title mb-1">{{ product.name }}</h5>
                     <p class="card-text text-muted">数量：×{{ product.quantity }}</p>
                   </div>
+
                 </div>
               </div>
+
+              <!-- 支付方式 -->
+              <div class="col-md-2 text-center">
+                <p class="text-muted">支付方式：</p>
+                <p :class="order.payMethod === 1 ? 'text-success' : 'text-primary'">
+                  <img v-if="order.payMethod === 1" class="col-md-2" src="@/static/img/wechat.png" alt="WeChat" />
+                  <img v-else class="col-md-2" src="@/static/img/AliPay.png" alt="AliPay" />
+                  {{ order.payMethod === 1 ? '微信' : '支付宝' }}
+                </p>
+              </div>  
 
 
               <!-- 店铺与买家信息 -->
@@ -65,7 +76,10 @@
               <!-- 支付状态列 -->
               <div class="col-md-2 text-center">
                 <p class="text-muted">支付状态：</p>
-                <p :class="order.isPaid === 0 ? 'text-danger' : 'text-success'">{{ order.isPaid === 0 ? '未支付' : '已支付' }}</p>
+                <p :class="order.isPaid === 0 ? 'text-danger' : 'text-success'" @click="toPay(order)">
+                  {{ order.isPaid === 0 ? '未支付' : '已支付' }} 
+                  <i v-if="order.isPaid === 0" class="fa-brands fa-amazon-pay"></i>
+                </p>
               </div>          
 
             </div>
@@ -158,6 +172,19 @@ export default {
     // 计算订单的总金额
     calculateTotal(products) {
       return products.reduce((total, product) => total + product.price * product.quantity, 0).toFixed(2);
+    },
+
+    //去支付
+    toPay(order) {
+      //跳转到订单支付界面，并携带参数
+      const order_params = { 
+        orderId: order.id,  //订单id
+        orderNumber: order.number,  //订单号（对应orders表number字段）
+        orderAmount: order.amount,  //订单金额（对应orders表amount字段）
+        orderTime: order.orderTime,   //下单时间
+      }
+      console.log('订单支付界面参数:', order_params);
+      this.$router.push({ name:'payment', params: order_params }); 
     },
   },
 };

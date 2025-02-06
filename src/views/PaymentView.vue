@@ -129,7 +129,7 @@ export default {
         //跳转到历史订单界面
         func2() {
             this.centerDialogVisible = false;
-            this.$router.push({ name: '/order_list' });
+            this.$router.push({ name: 'order_list' });
         },
     }
 };
