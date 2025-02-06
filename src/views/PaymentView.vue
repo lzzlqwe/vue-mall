@@ -44,7 +44,8 @@
                 :visible.sync="centerDialogVisible"
                 width="30%"
                 center>
-                <span>支付成功！</span>
+                <p>支付成功！</p>
+                <p>交易号: {{ transactionNumber }}</p>
                 <span slot="footer" class="dialog-footer">
                     <el-button type="success" @click="func1">返回首页</el-button>
                     <el-button type="primary" @click="func2">查看订单</el-button>
@@ -74,7 +75,8 @@ export default {
                 orderNumber: this.$route.params.orderNumber, // 订单号
                 orderTime: this.$route.params.orderTime // 下单时间
             },
-            payMethod: 1
+            payMethod: 1,
+            transactionNumber: '213123', // 交易号
         };
     },
     methods: {
@@ -85,39 +87,56 @@ export default {
 
         //去支付
         goToPay() {
-        // 显示加载动画
-        const loading = this.$loading({
-            lock: true,
-            text: 'Loading',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-        });
+            // 显示加载动画
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
 
-        //模拟支付
-
-        // 模拟支付过程，3秒后关闭加载动画并显示支付成功对话框
-        setTimeout(() => {
-            loading.close();//关闭加载动画
-
-            //支付成功后的逻辑处理(将订单标记为已支付)
-            axios.put('/buyer/order/paid', {
-                "orderId": this.order.id,
-                "payMethod": this.payMethod,
+            //模拟支付
+            axios.post('/buyer/payment/charge', {
+                "orderId": this.order.id, //订单id
+                "orderNumber": this.order.orderNumber, //订单number
+                "payMethod": this.payMethod, //支付方式
+                "orderAmount": this.order.orderAmount, //支付金额
             }).then((res) => {
                 if (res.data.code === 0) { 
                     this.$message.error(res.data.msg);
                 } else {
-                    console.log('将订单标记为已支付');
+                    this.transactionNumber = res.data.data.transactionNumber;
+                    console.log('支付成功！交易号:', this.transactionNumber);
                 }
-                }
+            }
             ).catch((error) => {
                 console.error('请求错误:', error);
                 this.$message.error('请求错误:', error);
             });
 
-            //弹出对话框
-            this.centerDialogVisible = true; 
-        }, 3000);
+            // 模拟支付过程，3秒后关闭加载动画并显示支付成功对话框
+            setTimeout(() => {
+                loading.close();//关闭加载动画
+
+                //支付成功后的逻辑处理(将订单标记为已支付)
+                axios.put('/buyer/order/paid', {
+                    "orderId": this.order.id, //订单id
+                    "payMethod": this.payMethod, //支付方式
+                }).then((res) => {
+                    if (res.data.code === 0) { 
+                        this.$message.error(res.data.msg);
+                    } else {
+                        console.log('将订单标记为已支付');
+                    }
+                    }
+                ).catch((error) => {
+                    console.error('请求错误:', error);
+                    this.$message.error('请求错误:', error);
+                });
+
+                //弹出对话框
+                this.centerDialogVisible = true; 
+            }, 3000);
         },
 
         // 返回首页
