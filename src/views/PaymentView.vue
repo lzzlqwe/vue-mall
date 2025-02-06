@@ -36,6 +36,19 @@
             </div>
           <!-- 底部 -->
           <footer-view class="el-footer"></footer-view>
+
+          <!-- 对话框 -->
+            <el-dialog
+                title="提示"
+                :visible.sync="centerDialogVisible"
+                width="30%"
+                center>
+                <span>支付成功！</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="success" @click="func1">返回首页</el-button>
+                    <el-button type="primary" @click="func2">查看订单</el-button>
+                </span>
+            </el-dialog>
         </main>
     </div>
 </template>
@@ -48,12 +61,13 @@ export default {
     components: { NavBarView, FooterView },
     data() {
         return {
+            centerDialogVisible: false,
             order: {
                 // id: 123456,
                 // orderAmount: 19.99, // 应付金额
                 // orderNumber: '202302040001', // 订单号
                 // orderTime: '2025-02-04 12:34:56' // 下单时间
-                id: this.$route.params.orderId,
+                id: this.$route.params.orderId, // 订单id
                 orderAmount: this.$route.params.orderAmount, // 应付金额
                 orderNumber: this.$route.params.orderNumber, // 订单号
                 orderTime: this.$route.params.orderTime // 下单时间
@@ -62,11 +76,43 @@ export default {
         };
     },
     methods: {
+        // goToPay() {
+        //     // 这里可以添加去支付的逻辑，比如跳转到对应的支付页面
+        //     console.log('去支付，选择的支付方式为：', this.payMethod === 1? '微信支付' : '支付宝支付');
+        //     this.$message.success(this.payMethod === 1? '微信支付' : '支付宝支付');
+        // }
+
         goToPay() {
-            // 这里可以添加去支付的逻辑，比如跳转到对应的支付页面
-            console.log('去支付，选择的支付方式为：', this.payMethod === 1? '微信支付' : '支付宝支付');
-            this.$message.success(this.payMethod === 1? '微信支付' : '支付宝支付');
-        }
+        // 显示加载动画
+        const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+        });
+
+        // 模拟支付过程，3秒后关闭加载动画并显示支付成功对话框
+        setTimeout(() => {
+            loading.close();//关闭加载动画
+            
+            //支付成功！
+            //支付成功后的逻辑处理
+
+            //弹出对话框
+            this.centerDialogVisible = true; 
+        }, 3000);
+        },
+
+        // 返回首页
+        func1() {
+            this.centerDialogVisible = false;
+            this.$router.push({ name: 'home' });
+        },
+
+        func2() {
+            this.centerDialogVisible = false;
+            // this.$router.push({ path: '/' });
+        },
     }
 };
 </script>
