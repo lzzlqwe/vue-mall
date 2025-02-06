@@ -128,14 +128,14 @@ export default {
               name: "搬家纸箱特硬加厚大纸箱 塑料扣手",
               picture: "https://tse3-mm.cn.bing.net/th/id/OIP-C.58z_UWvWcvls-RsM7P5D7wAAAA?w=138&h=150&c=7&r=0&o=5&dpr=1.5&pid=1.7",
               quantity: 2,
-              amount: 26.11,
+              price: 26.11,
             },
             {
               productId: 2,
               name: "加厚牛皮纸箱",
               picture: "https://tse2-mm.cn.bing.net/th/id/OIP-C.iAVcS160cvBKVthAoTFNAAHaHa?w=189&h=189&c=7&r=0&o=5&dpr=1.5&pid=1.7",
               quantity: 1,
-              amount: 15.00,
+              price: 15.00,
             },
           ],
         },
@@ -158,7 +158,7 @@ export default {
               name: "英菲官网高背静音办公椅",
               picture: "https://tse4-mm.cn.bing.net/th/id/OIP-C.x_wTh4zWByF5_bCW4oqXGQHaFj?w=251&h=188&c=7&r=0&o=5&dpr=1.5&pid=1.7",
               quantity: 1,
-              amount: 129.90,
+              price: 129.90,
             },
           ],
         },
@@ -174,7 +174,7 @@ export default {
     },
     // 计算订单的总金额
     calculateTotal(products) {
-      return products.reduce((total, product) => total + product.amount * product.quantity, 0).toFixed(2);
+      return products.reduce((total, product) => total + product.price * product.quantity, 0).toFixed(2);
     },
   },
 };

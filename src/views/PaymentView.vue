@@ -32,6 +32,7 @@
                     <p>订单号：<span>{{ order.orderNumber }}</span></p>
                     <p>下单时间：<span>{{ order.orderTime }}</span></p>
                     <button class="btn_goToPay" @click="goToPay">去支付</button>
+                    <button class="btn_noToPay" @click="noToPay">不支付</button>
                 </div>
             </div>
           <!-- 底部 -->
@@ -56,6 +57,7 @@
 <script>
 import NavBarView from '@/components/NavBarView.vue';
 import FooterView from '@/components/FooterView.vue';
+import axios from '../axios'; // 导入自定义的 Axios 实例
 
 export default {
     components: { NavBarView, FooterView },
@@ -76,12 +78,12 @@ export default {
         };
     },
     methods: {
-        // goToPay() {
-        //     // 这里可以添加去支付的逻辑，比如跳转到对应的支付页面
-        //     console.log('去支付，选择的支付方式为：', this.payMethod === 1? '微信支付' : '支付宝支付');
-        //     this.$message.success(this.payMethod === 1? '微信支付' : '支付宝支付');
-        // }
+        //取消支付
+        noToPay() {
+            this.$router.push({ name: 'home' });
+        },
 
+        //去支付
         goToPay() {
         // 显示加载动画
         const loading = this.$loading({
@@ -91,12 +93,27 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
         });
 
+        //模拟支付
+
         // 模拟支付过程，3秒后关闭加载动画并显示支付成功对话框
         setTimeout(() => {
             loading.close();//关闭加载动画
-            
-            //支付成功！
-            //支付成功后的逻辑处理
+
+            //支付成功后的逻辑处理(将订单标记为已支付)
+            axios.put('/buyer/order/paid', {
+                "orderId": this.order.id,
+                "payMethod": this.payMethod,
+            }).then((res) => {
+                if (res.data.code === 0) { 
+                    this.$message.error(res.data.msg);
+                } else {
+                    console.log('将订单标记为已支付');
+                }
+                }
+            ).catch((error) => {
+                console.error('请求错误:', error);
+                this.$message.error('请求错误:', error);
+            });
 
             //弹出对话框
             this.centerDialogVisible = true; 
@@ -184,6 +201,17 @@ export default {
 .btn_goToPay {
     padding: 10px 20px;
     background-color: #42b983;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px;
+    margin-top: 30px;
+    margin-right: 15px;
+}
+.btn_noToPay{
+    padding: 10px 20px;
+    background-color: #F56C6C;
     color: white;
     border: none;
     border-radius: 4px;
