@@ -44,7 +44,7 @@
                   <div class="row align-items - flex - start"> 
                   <div class="col-md-6 text-center">
                     <p class="text-muted">店铺：</p>
-                    <p>{{ order.shopName }}</p>
+                    <p>抖音电商专营店</p>
                   </div>
                   <div class="col-md-6 text-center">
                     <p class="text-muted">买家：</p>
@@ -103,69 +103,52 @@
 <script>
 import NavBarView from "@/components/NavBarView.vue";
 import FooterView from "@/components/FooterView.vue";
+import axios from '../axios'; // 导入自定义的 Axios 实例
 
 export default {
   components: { NavBarView, FooterView },
   data() {
     return {
-      orderList: [
-        {
-          id: 1,
-          number: "299753081684",
-          userId: 1,
-          addressBookId: 1,
-          orderTime: "2024-08-13 12:54:04",
-          payTime: "2024-08-13 13:10:00",
-          payMethod: 1,
-          isPaid: 1,
-          username: "赖志立",
-          email: "example@example.com",
-          addressDetail: "中国广东省广州市天河区五山路381号广东大学大学城校区12栋305宿舍",
-          shopName: "抖音电商专营店",
-          products: [
-            {
-              productId: 1,
-              name: "搬家纸箱特硬加厚大纸箱 塑料扣手",
-              picture: "https://tse3-mm.cn.bing.net/th/id/OIP-C.58z_UWvWcvls-RsM7P5D7wAAAA?w=138&h=150&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-              quantity: 2,
-              price: 26.11,
-            },
-            {
-              productId: 2,
-              name: "加厚牛皮纸箱",
-              picture: "https://tse2-mm.cn.bing.net/th/id/OIP-C.iAVcS160cvBKVthAoTFNAAHaHa?w=189&h=189&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-              quantity: 1,
-              price: 15.00,
-            },
-          ],
-        },
-        {
-          id: 2,
-          number: "295613667092",
-          userId: 2,
-          addressBookId: 2,
-          orderTime: "2024-08-10 14:19:17",
-          payTime: "2024-08-10 14:30:00",
-          payMethod: 1,
-          isPaid: 0,
-          username: "赖志立",
-          email: "example2@example.com",
-          addressDetail: "中国上海市上海市浦东新区世纪大道100号上海环球金融中心20楼2005室",
-          shopName: "抖音电商旗舰店",
-          products: [
-            {
-              productId: 3,
-              name: "英菲官网高背静音办公椅",
-              picture: "https://tse4-mm.cn.bing.net/th/id/OIP-C.x_wTh4zWByF5_bCW4oqXGQHaFj?w=251&h=188&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-              quantity: 1,
-              price: 129.90,
-            },
-          ],
-        },
-      ],
+      orderList: [],
     };
   },
+
+  mounted() {
+    axios.get("/buyer/order/list").then((result) => {
+        this.transformData(result.data.data);
+        console.log("返回当前用户历史订单数据: ", this.orderList);
+      }).catch((error) => {
+        console.error('获取订单数据失败:', error);
+        // 可以在这里处理错误，比如显示错误消息
+        this.$message.error("获取订单数据失败，请重试!");
+      });
+  },
+
   methods: {
+    transformData(backendData) {
+            const orderMap = {};
+            backendData.forEach(orderData => {
+                if (!orderMap[orderData.id]) {
+                    orderMap[orderData.id] = {
+                      ...orderData,
+                        products: []
+                    };
+                }
+                orderMap[orderData.id].products.push({
+                    productId: orderData.productId,
+                    name: orderData.name,
+                    picture: orderData.picture,
+                    quantity: orderData.quantity,
+                    price: orderData.price
+                });
+                delete orderMap[orderData.id].productId;
+                delete orderMap[orderData.id].name;
+                delete orderMap[orderData.id].picture;
+                delete orderMap[orderData.id].quantity;
+                delete orderMap[orderData.id].price;
+            });
+            this.orderList = Object.values(orderMap);
+        },
     viewDetails(order) {
       this.$message.success(`查看订单详情: ${order.number}`);
     },
