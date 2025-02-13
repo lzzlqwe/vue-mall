@@ -26,14 +26,16 @@
             </el-col>
           </el-row>
           <!-- 始终显示添加地址按钮 -->
-          <el-col :span="4">
-            <el-button type="dashed" icon="el-icon-plus" @click="addAddress" :disabled="addresses.length >= 3">add new
-              address</el-button>
-            <!-- 如果地址数量超过 3，显示提示 -->
-            <!-- <span v-if="addresses.length >= 3" style="color: red; font-size: 12px;">
-              最多 3 个地址
-            </span> -->
-          </el-col>
+          <el-row>
+            <el-col :span="4">
+              <el-button type="info" icon="el-icon-plus" @click="addAddress" :disabled="addresses.length >= 3">add new
+                address</el-button>
+              <!-- 如果地址数量超过 3，显示提示 -->
+              <!-- <span v-if="addresses.length >= 3" style="color: red; font-size: 12px;">
+                最多 3 个地址
+              </span> -->
+            </el-col>
+          </el-row>
           <!-- 添加地址弹窗 -->
           <el-dialog title="添加地址" :visible.sync="dialogVisible" width="50%">
             <el-form :model="addressForm" :rules="rules" ref="addressForm" label-width="100px">
