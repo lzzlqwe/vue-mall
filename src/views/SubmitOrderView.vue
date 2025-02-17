@@ -161,7 +161,7 @@ export default {
       // 添加地址相关数据 
       dialogVisible: false, // 控制添加地址弹窗显示
       addressForm: {
-        username: '肘比',
+        username: '李华', 
         email: '327894239@qq.com',
         detail: '中大',
         city: '广州',
