@@ -2,7 +2,8 @@
   <div>
     <main>
       <!-- 导航栏 -->
-      <nav-bar-view></nav-bar-view>
+      <nav-bar-view @user::logout="logout"></nav-bar-view>
+      <!-- <nav-bar-view></nav-bar-view> -->
       <div class="container my-4" style="min-height: calc(80vh);">
         <!-- 主体部分 -->
         <div v-for="order in orderList" :key="order.id" class="card mb-3 shadow-sm">
@@ -186,6 +187,17 @@ export default {
       console.log('订单支付界面参数:', order_params);
       this.$router.push({ name:'payment', params: order_params }); 
     },
+
+    logout() {
+            axios.post('/buyer/user/logout').then((res) => {
+                console.log('退出登录:', res.data);
+                localStorage.clear(); // 从 localStorage 删除 token, userId, username
+                this.$router.push({ name: 'sign_in' });
+                this.$message.warning("退出登录");
+            }).catch((error) => {
+                console.error('退出登录失败:', error);
+            });
+        }
   },
 };
 </script>

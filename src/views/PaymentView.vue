@@ -1,8 +1,9 @@
 <template>
-    <div>    
+    <div>
         <main>
-          <!-- 导航栏 -->
-          <nav-bar-view></nav-bar-view>
+            <!-- 导航栏 -->
+            <nav-bar-view @user::logout="logout"></nav-bar-view>
+            <!-- <nav-bar-view></nav-bar-view> -->
             <div class="payment-container" style="min-height: calc(80vh);">
                 <!-- 主体部分 -->
                 <div class="payment-success">
@@ -35,15 +36,11 @@
                     <button class="btn_noToPay" @click="noToPay">不支付</button>
                 </div>
             </div>
-          <!-- 底部 -->
-          <footer-view class="el-footer"></footer-view>
+            <!-- 底部 -->
+            <footer-view class="el-footer"></footer-view>
 
-          <!-- 对话框 -->
-            <el-dialog
-                title="提示"
-                :visible.sync="centerDialogVisible"
-                width="30%"
-                center>
+            <!-- 对话框 -->
+            <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
                 <p>支付成功！</p>
                 <p>交易号: {{ transactionNumber }}</p>
                 <span slot="footer" class="dialog-footer">
@@ -106,13 +103,13 @@ export default {
                     "payMethod": this.payMethod, //支付方式
                     "orderAmount": this.order.orderAmount, //支付金额
                 }).then((res) => {
-                    if (res.data.code === 0) { 
+                    if (res.data.code === 0) {
                         this.$message.error(res.data.msg);
                     } else {
                         this.transactionNumber = res.data.data.transactionNumber;
                         console.log('支付成功！交易号:', this.transactionNumber);
                         //弹出对话框
-                        this.centerDialogVisible = true; 
+                        this.centerDialogVisible = true;
                     }
                 }
                 ).catch((error) => {
@@ -135,6 +132,17 @@ export default {
             this.centerDialogVisible = false;
             this.$router.push({ name: 'order_list' });
         },
+
+        logout() {
+            axios.post('/buyer/user/logout').then((res) => {
+                console.log('退出登录:', res.data);
+                localStorage.clear(); // 从 localStorage 删除 token, userId, username
+                this.$router.push({ name: 'sign_in' });
+                this.$message.warning("退出登录");
+            }).catch((error) => {
+                console.error('退出登录失败:', error);
+            });
+        }
     }
 };
 </script>
@@ -149,60 +157,73 @@ export default {
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+
 .payment-success h2 {
     font-size: 24px;
     color: #333;
     margin-bottom: 10px;
 }
+
 .payment-success p {
     font-size: 14px;
     color: #666;
     margin-bottom: 20px;
 }
+
 .order-amount {
     font-size: 18px;
     color: #333;
     margin-bottom: 30px;
 }
+
 .order-amount strong {
     color: orange;
     font-size: 24px;
 }
+
 .payment-methods {
     display: flex;
     justify-content: center;
     gap: 50px;
     margin-bottom: 20px;
 }
+
 .payment-option {
     text-align: center;
 }
+
 .payment-option img {
     width: 80px;
     height: 80px;
     margin-bottom: 10px;
 }
+
 .payment-option p {
     font-size: 16px;
     color: #333;
 }
+
 .order-info {
     font-size: 14px;
     color: #f56c6c;
     margin-top: 20px;
 }
+
 .order-info p {
     margin: 5px 0;
 }
+
 .order-info span {
     font-weight: bold;
 }
+
 .el-footer {
     background-color: #f2f2f2;
     color: #666;
     text-align: center;
     line-height: 60px;
 }
+
 .btn_goToPay {
     padding: 10px 20px;
     background-color: #42b983;
@@ -214,7 +235,8 @@ export default {
     margin-top: 30px;
     margin-right: 15px;
 }
-.btn_noToPay{
+
+.btn_noToPay {
     padding: 10px 20px;
     background-color: #F56C6C;
     color: white;
