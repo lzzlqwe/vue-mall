@@ -42,11 +42,18 @@
               <!-- 支付方式 -->
               <div class="col-md-2 text-center">
                 <p class="text-muted">支付方式：</p>
-                <p :class="order.payMethod === 1 ? 'text-success' : 'text-primary'">
+                <!-- <p :class="order.payMethod === 1 ? 'text-success' : 'text-primary'">
+                  <img v-if="order.payMethod === 1" class="col-md-2" src="@/static/img/wechat.png" alt="WeChat" />
+                  <img v-else class="col-md-2" src="@/static/img/AliPay.png" alt="AliPay" />
+                  {{ order.payMethod === 1 ? '微信' : '支付宝' }}
+                </p> -->
+                <p v-if="order.isPaid === 1" :class="order.payMethod === 1 ? 'text-success' : 'text-primary'">
                   <img v-if="order.payMethod === 1" class="col-md-2" src="@/static/img/wechat.png" alt="WeChat" />
                   <img v-else class="col-md-2" src="@/static/img/AliPay.png" alt="AliPay" />
                   {{ order.payMethod === 1 ? '微信' : '支付宝' }}
                 </p>
+                <p v-else-if="order.isPaid === 0" class="text-danger">请去支付</p>
+                <p v-else class="text-warning">无</p>
               </div>  
 
 
@@ -77,8 +84,13 @@
               <!-- 支付状态列 -->
               <div class="col-md-2 text-center">
                 <p class="text-muted">支付状态：</p>
-                <p :class="order.isPaid === 0 ? 'text-danger' : 'text-success'" @click="toPay(order)">
+                <!-- <p :class="order.isPaid === 0 ? 'text-danger' : 'text-success'" @click="toPay(order)">
                   {{ order.isPaid === 0 ? '未支付' : '已支付' }} 
+                  <i v-if="order.isPaid === 0" class="fa-brands fa-amazon-pay"></i>
+                </p> -->
+                <p :class="order.isPaid === 0 ? 'text-danger' : (order.isPaid === 1 ? 'text-success' : 'text-warning')"
+                  @click="toPay(order)">
+                  {{ order.isPaid === 0 ? '未支付' : (order.isPaid === 1 ? '已支付' : '订单超时') }}
                   <i v-if="order.isPaid === 0" class="fa-brands fa-amazon-pay"></i>
                 </p>
               </div>          
