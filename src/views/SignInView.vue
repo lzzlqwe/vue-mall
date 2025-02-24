@@ -100,7 +100,7 @@
                         localStorage.setItem('username', username); // 保存 用户名
 
                         // 设置20小时的有效期(对应后端的token有效期)
-                        const expire = 1000 * 60 * 60 * 20;
+                        const expire = res.data.data.expireTime * 1000;
                         setTimeout(() => {
                             localStorage.removeItem('token', '');
                             localStorage.removeItem('userId', '');
