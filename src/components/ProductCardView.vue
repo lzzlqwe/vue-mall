@@ -1,7 +1,13 @@
 <template>
   <div class="card">
     <el-card :body-style="{ padding: '0px'}">
-    <img :src=product.picture class="image" @click="openDialog">
+    <!-- <img :src=product.picture class="image" @click="openDialog"> -->
+      <div v-if="product.picture" class="image-container">
+        <img :src="product.picture" class="image" @click="openDialog" />
+      </div>
+      <div v-else class="placeholder-box" @click="openDialog">
+        暂无图片
+      </div>
     <div style="padding: 14px;" @click="openDialog">
         <span class="span" style="font-weight: bold;">{{ product.name }}</span> <br>
         <div class="span">{{ product.description }}</div>
@@ -85,6 +91,13 @@ export default {
 
   .price_number {
     font-size: 20px;
+  }
+
+  .placeholder-box {
+    width: 100%; /* 设置固定的宽度 */
+    height: 200px; /* 设置固定的高度 */
+    object-fit: cover; /* 控制图片如何适应这些固定的尺寸 */
+    display: block;
   }
   
 </style>
