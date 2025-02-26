@@ -346,9 +346,16 @@ export default {
           }
 
           axios.post('/buyer/product', productDTO)
-            .then(res => {  // eslint-disable-line no-unused-vars
+            .then(response => {  // eslint-disable-line no-unused-vars
+              // 如果 code 为 0，抛出错误
+              if (response.data.code === 0) {
+                this.addDialogVisible = false
+                throw new Error(response.data.msg); // 抛出错误信息
+              }
+
               this.$message.success('商品添加成功')
               this.addDialogVisible = false
+
               setTimeout(() => {
                 window.location.reload();
               }, 500); // 延迟0.5秒刷新
@@ -358,7 +365,8 @@ export default {
             })
             .catch(error => {
               console.error('添加商品失败:', error)
-              this.$message.error('商品添加失败')
+              // this.$message.error('商品添加失败')
+              this.$message.error('删除失败: ' + (error.response?.data?.message || error.message));
             })
         }
       })
@@ -427,7 +435,17 @@ export default {
         // 调用后端接口（需根据实际接口调整）
         await axios.delete('/buyer/product', {
           params: { ids: this.selectedProductIds.join(',') }
-        });
+        }).then(response => {
+          // 打印返回的数据
+          // console.log('删除接口返回数据:', response.data);
+          // 打印返回的数据
+          console.log('删除接口返回数据:', response.data);
+
+          // 如果 code 为 0，抛出错误
+          if (response.data.code === 0) {
+            throw new Error(response.data.msg); // 抛出错误信息
+          }
+        })
 
         // 方式一：重新加载数据（推荐）
         // this.getProducts(this.page, this.pageSize);
@@ -435,7 +453,7 @@ export default {
           window.location.reload();
         }, 500); // 延迟0.5秒刷新
 
-        this.$message.success('删除成功');
+        this.$message.success('删除完成');
       } catch (error) {
         if (error !== 'cancel') {
           this.$message.error('删除失败: ' + (error.response?.data?.message || error.message));
