@@ -6,15 +6,31 @@
         :cartNum="cartNum"></nav-bar-view>
 
       <!-- 新增按钮插入到导航栏下方 -->
-      <el-button type="primary" @click="showAddDialog" size="small" style="margin: 20px">
+      <!-- <el-button type="primary" @click="showAddDialog" size="small" style="margin: 20px">
         新增商品
-      </el-button>
+      </el-button> -->
+      <!-- 将原有新增按钮修改为按钮组 -->
+      <el-row type="flex" justify="space-between" align="middle" style="margin: 20px">
+        <el-col :span="12">
+          <el-button type="primary" @click="showAddDialog" size="small">
+            新增商品
+          </el-button>
+        </el-col>
+
+        <el-col :span="12" style="text-align: right">
+          <el-button type="danger" @click="batchDelete" size="small" :disabled="selectedProductIds.length === 0"
+            icon="el-icon-delete">
+            批量删除（{{ selectedProductIds.length }}）
+          </el-button>
+        </el-col>
+      </el-row>
 
       <div>
         <el-main style="min-height: calc(80vh);">
           <el-row>
             <el-col :span="4" v-for="product in products" :key="product">
-              <product-card-view :product=product @product:click="openDialog"></product-card-view>
+              <product-card-view :product=product @product:click="openDialog"
+                @selection-change="handleSelectionChange"></product-card-view>
             </el-col>
           </el-row>
         </el-main>
@@ -163,7 +179,17 @@ export default {
         //   { required: true, message: '请上传商品图片', trigger: 'change' }
         // ]
       },
-      uploadUrl: '/common/upload'
+      uploadUrl: '/common/upload',
+
+      selectedIds: [], // 存储选中商品ID
+    }
+  },
+  computed: {
+    // 获取所有选中商品的ID（自动更新）
+    selectedProductIds() {
+      return this.products
+        .filter(product => product.selected)
+        .map(product => product.id);
     }
   },
   mounted() {
@@ -189,6 +215,11 @@ export default {
         console.log("返回商品记录: ", result.data.data.records);
         this.products = result.data.data.records;
         this.total = result.data.data.total;
+        // 修复：在 map 中添加 selected 字段
+        this.products = result.data.data.records.map(p => ({
+          ...p,
+          selected: false // 确保每个商品对象都有此字段
+        }));
       }).catch((error) => {
         console.error('未携带token, 请先登录:', error);
         this.$router.push({ name: 'sign_in' });
@@ -320,7 +351,7 @@ export default {
               this.addDialogVisible = false
               setTimeout(() => {
                 window.location.reload();
-              }, 500); // 延迟1秒刷新
+              }, 500); // 延迟0.5秒刷新
               // this.products = [];
               // this.getProducts() // 刷新商品列表
               // this.$router.replace('/home?refresh=' + Date.now());  // 强制更新路由（Vue Router特性）
@@ -373,7 +404,44 @@ export default {
     resetForm() {
       this.$refs.addForm.resetFields()
       this.addForm.picture = ''
-    }
+    },
+
+    // 处理子组件选中状态变化
+    handleSelectionChange({ id, selected }) {
+      const target = this.products.find(p => p.id === id);
+      if (target) {
+        // 使用Vue.set确保响应式更新
+        this.$set(target, 'selected', selected);
+      }
+    },
+
+    // 批量删除方法
+    async batchDelete() {
+      try {
+        await this.$confirm(`确定删除选中的${this.selectedProductIds.length}件商品吗？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+
+        // 调用后端接口（需根据实际接口调整）
+        await axios.delete('/buyer/product', {
+          params: { ids: this.selectedProductIds.join(',') }
+        });
+
+        // 方式一：重新加载数据（推荐）
+        // this.getProducts(this.page, this.pageSize);
+        setTimeout(() => {
+          window.location.reload();
+        }, 500); // 延迟0.5秒刷新
+
+        this.$message.success('删除成功');
+      } catch (error) {
+        if (error !== 'cancel') {
+          this.$message.error('删除失败: ' + (error.response?.data?.message || error.message));
+        }
+      }
+    },
   }
 
 }
