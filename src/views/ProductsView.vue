@@ -39,6 +39,13 @@
         </el-pagination>
       </div>
 
+      <!-- 悬浮按钮 -->
+      <router-link to="/chat">
+        <el-button type="primary" style="position: fixed; bottom: 40px; right: 40px; z-index: 999;">
+          AI客服
+        </el-button>
+      </router-link>
+
       <el-footer>
         <footer-view></footer-view>
       </el-footer>

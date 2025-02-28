@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: '/api', // 设置基础 URL
-  timeout: 5000, // 可选：设置请求超时
+  timeout: 30000, // 可选：设置请求超时(30秒)
 //   headers: {
 //     "Access-Control-Allow-Origin": "*",
 //     "Content-Type": "application/json;charset=utf-8"

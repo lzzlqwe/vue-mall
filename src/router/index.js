@@ -8,6 +8,7 @@ import ShoppingCartView from '@/views/ShoppingCartView.vue';
 import SubmitOrderView from '@/views/SubmitOrderView.vue';
 import PaymentView from '@/views/PaymentView.vue';
 import OrderListView from '@/views/OrderListView.vue';
+import ChatView from '@/views/ChatView.vue';
 
 Vue.use(VueRouter);
 
@@ -56,6 +57,12 @@ const routes = [
     path: '/order_list',
     name: 'order_list',
     component: OrderListView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: ChatView,
     meta: { requiresAuth: true }
   },
   {
